@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Panier | Edenelle Création</title>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Stripe JS -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <!-- PayPal SDK (remplacez YOUR_PAYPAL_CLIENT_ID) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR&locale=fr_FR" data-sdk-integration-source="button-factory"></script>
+  <style>
+    /* ─── CONFIG KEYS ─── */
+    /* Remplacez ces deux valeurs dans le fichier paiement.js */
+
+    .cart-page { max-width: 1180px; margin: 0 auto; padding: 40px 32px 100px; }
+
+    /* Steps */
+    .checkout-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 48px; }
+    .cs { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--taupe); }
+    .cs.active { color: var(--text); font-weight: 500; }
+    .cs.done { color: var(--gold); }
+    .cs-n { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; transition: all 0.3s; }
+    .cs.done .cs-n { background: var(--gold); border-color: var(--gold); color: var(--text); }
+    .cs.active .cs-n { background: var(--text); border-color: var(--text); color: var(--cream); }
+    .cs-line { width: 56px; height: 1px; background: var(--border); margin: 0 6px; }
+
+    /* Layout */
+    .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 32px; align-items: start; }
+
+    /* Cart box */
+    .cart-box { background: var(--warm-white); border: 1px solid var(--border); }
+    .box-head { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .box-head h2 { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 400; }
+    .cart-row { padding: 18px 24px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 70px 1fr auto; gap: 14px; align-items: start; }
+    .c-thumb { width: 70px; height: 70px; background: linear-gradient(145deg,var(--blush),var(--taupe)); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .c-name { font-family: 'Cormorant Garamond', serif; font-size: 17px; margin-bottom: 4px; }
+    .c-perso { font-size: 11px; color: var(--text-light); margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .c-perso span { background: var(--blush); padding: 2px 7px; }
+    .qty-c { display: inline-flex; align-items: center; border: 1px solid var(--border); }
+    .qty-b { width: 30px; height: 30px; background: none; border: none; cursor: pointer; font-size: 17px; color: var(--text); transition: background 0.15s; }
+    .qty-b:hover { background: var(--blush); }
+    .qty-v { width: 34px; height: 30px; text-align: center; border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border); font-family: 'Jost'; font-size: 13px; background: var(--warm-white); color: var(--text); }
+    .c-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .c-price { font-size: 16px; white-space: nowrap; }
+    .c-del { background: none; border: none; cursor: pointer; color: var(--taupe); font-size: 21px; line-height: 1; transition: color 0.2s; padding: 2px; }
+    .c-del:hover { color: #c0392b; }
+    .empty-state { padding: 72px 24px; text-align: center; }
+    .empty-state .big { font-size: 52px; margin-bottom: 14px; }
+    .empty-state p { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-style: italic; color: var(--text-light); margin-bottom: 24px; }
+
+    /* Promo */
+    .promo-row { padding: 14px 24px; display: flex; gap: 8px; border-top: 1px solid var(--border); }
+    .promo-inp { flex: 1; border: 1px solid var(--border); padding: 10px 13px; font-family: 'Jost'; font-size: 13px; outline: none; background: var(--cream); transition: border-color 0.2s; text-transform: uppercase; }
+    .promo-inp:focus { border-color: var(--taupe); }
+    .promo-apply { padding: 10px 16px; background: var(--text); color: var(--cream); border: none; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-family: 'Jost'; cursor: pointer; white-space: nowrap; }
+    .promo-ok { padding: 10px 24px; font-size: 13px; color: #2E7D32; background: #E8F5E9; display: none; align-items: center; gap: 6px; }
+    .promo-ok.show { display: flex; }
+
+    /* Summary */
+    .sum-box { background: var(--warm-white); border: 1px solid var(--border); position: sticky; top: 88px; }
+    .sum-head { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+    .sum-head h2 { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 400; }
+    .sum-lines { padding: 18px 24px 12px; }
+    .sum-line { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 9px; color: var(--text-light); }
+    .sum-line.total { font-size: 17px; color: var(--text); font-weight: 500; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
+    .sum-line.total span:last-child { font-family: 'Cormorant Garamond', serif; font-size: 22px; }
+    .ship-label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-light); margin: 0 0 8px; }
+    .ship-opt { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border: 1px solid var(--border); margin-bottom: 7px; cursor: pointer; transition: all 0.2s; }
+    .ship-opt:hover, .ship-opt.active { border-color: var(--taupe); background: var(--blush); }
+    .ship-opt input[type=radio] { accent-color: var(--gold); flex-shrink: 0; }
+    .ship-name { font-size: 13px; color: var(--text); }
+    .ship-detail { font-size: 11px; color: var(--text-light); }
+    .sum-cta { padding: 4px 24px 20px; }
+    .btn-co { width: 100%; padding: 15px; background: var(--text); color: var(--cream); border: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'Jost'; cursor: pointer; transition: background 0.2s; margin-bottom: 8px; }
+    .btn-co:hover:not(:disabled) { background: var(--dark-taupe); }
+    .btn-co:disabled { opacity: 0.38; cursor: not-allowed; }
+    .secure-lbl { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 11px; color: var(--text-light); margin-bottom: 16px; }
+    .trust-row { padding: 0 24px 18px; }
+    .t-item { font-size: 12px; color: var(--text-light); margin-bottom: 6px; display: flex; align-items: center; gap: 7px; }
+
+    /* Modal */
+    .overlay { position: fixed; inset: 0; background: rgba(42,31,27,0.68); z-index: 600; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .overlay.open { display: flex; }
+    .modal { background: var(--warm-white); max-width: 580px; width: 100%; max-height: 92vh; overflow-y: auto; display: flex; flex-direction: column; }
+    .modal-hd { padding: 22px 26px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--warm-white); z-index: 2; }
+    .modal-hd h3 { font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 400; }
+    .modal-x { background: none; border: none; font-size: 27px; cursor: pointer; color: var(--taupe); line-height: 1; padding: 0 2px; }
+    .modal-bd { padding: 26px; flex: 1; }
+    .mstep { display: none; }
+    .mstep.active { display: block; }
+    .mlbl { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+    .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-bottom: 13px; }
+    .mgrid.full { grid-template-columns: 1fr; }
+    .mfg { display: flex; flex-direction: column; gap: 5px; }
+    .mfl { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text); font-weight: 500; }
+    .mfi { border: 1px solid var(--border); background: var(--cream); padding: 10px 13px; font-family: 'Jost'; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; width: 100%; }
+    .mfi:focus { border-color: var(--taupe); }
+    .mfi.err { border-color: #c0392b; animation: shake 0.3s; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+    /* Recap */
+    .recap-box { background: var(--cream); border: 1px solid var(--border); padding: 14px 16px; margin-bottom: 18px; }
+    .recap-line { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; color: var(--text-light); }
+    .recap-line.total { font-size: 15px; color: var(--text); font-weight: 500; border-top: 1px solid var(--border); padding-top: 8px; margin-top: 3px; }
+
+    /* Payment tabs */
+    .pay-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .pay-tab { border: 2px solid var(--border); padding: 14px 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .pay-tab:hover, .pay-tab.active { border-color: var(--dark-taupe); background: var(--blush); }
+    .pay-tab .p-ico { font-size: 22px; margin-bottom: 4px; }
+    .pay-tab .p-lbl { font-size: 12px; color: var(--text); font-weight: 400; }
+    .pay-panel { display: none; }
+    .pay-panel.active { display: block; }
+
+    /* Stripe card element */
+    .stripe-wrap { border: 1px solid var(--border); padding: 13px 14px; background: var(--cream); margin-bottom: 14px; transition: border-color 0.2s; }
+    .stripe-wrap.focused { border-color: var(--taupe); }
+    #stripe-card-errors { color: #c0392b; font-size: 12px; margin-top: 6px; min-height: 16px; }
+    .stripe-secure { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-light); margin-top: 8px; }
+    .stripe-badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .stripe-badge { border: 1px solid var(--border); padding: 4px 9px; font-size: 10px; color: var(--text-light); letter-spacing: 0.05em; }
+
+    /* PayPal container */
+    #paypal-button-container { min-height: 48px; }
+    .paypal-note { font-size: 12px; color: var(--text-light); margin-bottom: 14px; padding: 10px 12px; background: var(--blush); border: 1px solid var(--border); }
+
+    /* Info blocks */
+    .info-blk { padding: 13px 15px; background: var(--blush); border: 1px solid var(--border); font-size: 13px; color: var(--text-light); line-height: 1.7; margin-bottom: 12px; }
+
+    /* Modal nav */
+    .mnav { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
+
+    /* Processing overlay */
+    .processing { display: none; position: absolute; inset: 0; background: rgba(250,247,242,0.88); align-items: center; justify-content: center; flex-direction: column; gap: 14px; z-index: 10; }
+    .processing.show { display: flex; }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* Success */
+    .success-wrap { text-align: center; padding: 16px 0; }
+    .success-wrap .s-ico { font-size: 60px; margin-bottom: 18px; }
+    .success-wrap h3 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; margin-bottom: 10px; }
+    .success-wrap p { font-size: 14px; color: var(--text-light); margin-bottom: 6px; }
+    .next-box { background: var(--cream); border: 1px solid var(--border); padding: 18px; margin: 22px 0; text-align: left; }
+    .next-box p { font-size: 14px; color: var(--text-light); margin-bottom: 7px; }
+
+    @media(max-width:900px) { .cart-layout{grid-template-columns:1fr;} .sum-box{position:static;} .cs span:not(.cs-n){display:none;} .cs-line{width:20px;} }
+    @media(max-width:600px) { .cart-page{padding:24px 16px 80px;} .cart-row{grid-template-columns:56px 1fr;} .c-right{grid-column:2;} .pay-tabs{grid-template-columns:1fr 1fr;} .mgrid{grid-template-columns:1fr;} .modal-bd{padding:18px;} }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+  <div class="breadcrumb-wrap">
+    <div class="breadcrumb"><a href="index.html">Accueil</a><span class="breadcrumb-sep">›</span><span>Mon panier</span></div>
+  </div>
+
+  <div class="cart-page">
+    <!-- STEPS -->
+    <div class="checkout-steps">
+      <div class="cs active" id="cs1"><span class="cs-n">1</span><span>Panier</span></div>
+      <div class="cs-line"></div>
+      <div class="cs" id="cs2"><span class="cs-n">2</span><span>Livraison</span></div>
+      <div class="cs-line"></div>
+      <div class="cs" id="cs3"><span class="cs-n">3</span><span>Paiement</span></div>
+      <div class="cs-line"></div>
+      <div class="cs" id="cs4"><span class="cs-n">4</span><span>Confirmation</span></div>
+    </div>
+
+    <div class="cart-layout">
+      <!-- ARTICLES -->
+      <div>
+        <div class="cart-box">
+          <div class="box-head">
+            <h2>Mon panier</h2>
+            <span id="cartNb" style="font-size:13px;color:var(--text-light);"></span>
+          </div>
+          <div id="cartRows"></div>
+          <div class="promo-row" id="promoRow">
+            <input class="promo-inp" id="promoInp" placeholder="CODE PROMO" maxlength="20"/>
+            <button class="promo-apply" onclick="applyPromo()">Appliquer</button>
+          </div>
+          <div class="promo-ok" id="promoOk">✓ <span id="promoMsg"></span></div>
+        </div>
+        <div id="delaiBox" style="margin-top:14px;padding:14px 18px;background:var(--blush);border:1px solid var(--border);display:flex;gap:12px;">
+          <span style="font-size:22px;flex-shrink:0;">🧵</span>
+          <div>
+            <p style="font-size:13px;font-weight:500;margin-bottom:2px;">Confection artisanale en Vendée</p>
+            <p style="font-size:13px;color:var(--text-light);">Chaque broderie est réalisée à la main. Délai de fabrication : <strong>3 à 4 semaines</strong>, puis expédition sous 3–5 jours.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUMMARY -->
+      <div>
+        <div class="sum-box">
+          <div class="sum-head"><h2>Récapitulatif</h2></div>
+          <div class="sum-lines">
+            <div class="sum-line"><span>Sous-total</span><span id="sumSub">—</span></div>
+            <div class="sum-line" id="sumPromoLine" style="display:none;color:#2E7D32;"><span>Réduction <small id="sumPromoCd"></small></span><span id="sumPromoAmt"></span></div>
+            <p class="ship-label" style="margin-top:12px;">Mode de livraison</p>
+            <label class="ship-opt active" id="soMR" onclick="setSh(this,3.99,'Mondial Relay')">
+              <input type="radio" name="sh" checked/>
+              <div style="flex:1;"><div class="ship-name">📦 Mondial Relay</div><div class="ship-detail">3–5 jours · Point relais</div></div>
+              <span id="mrLbl" style="font-size:13px;font-weight:500;">3,99 €</span>
+            </label>
+            <label class="ship-opt" id="soCol" onclick="setSh(this,6.5,'Colissimo')">
+              <input type="radio" name="sh"/>
+              <div style="flex:1;"><div class="ship-name">🏠 Colissimo</div><div class="ship-detail">2–3 jours · Domicile</div></div>
+              <span style="font-size:13px;font-weight:500;">6,50 €</span>
+            </label>
+            <div class="sum-line" id="sumShipLine"><span>Livraison (<span id="sumShipName">Mondial Relay</span>)</span><span id="sumShipVal">—</span></div>
+            <div class="sum-line total"><span>Total</span><span id="sumTotal">—</span></div>
+          </div>
+          <div class="sum-cta">
+            <button class="btn-co" id="btnCo" onclick="openCheckout()">Passer la commande →</button>
+            <div class="secure-lbl">🔒 Paiement Stripe &amp; PayPal sécurisé</div>
+          </div>
+          <div class="trust-row">
+            <div class="t-item">🇫🇷 Fabriqué en France · Vendée</div>
+            <div class="t-item">✅ Matières Oeko-Tex certifiées</div>
+            <div class="t-item">💛 Satisfaite ou remboursée</div>
+            <div class="t-item">📦 Mondial Relay offert dès 130 €</div>
+          </div>
+        </div>
+        <a href="catalogue.html" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;font-size:12px;color:var(--text-light);text-decoration:none;padding:10px;">← Continuer mes achats</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CHECKOUT MODAL ═══ -->
+  <div class="overlay" id="overlay">
+    <div class="modal" style="position:relative;">
+
+      <!-- Processing spinner -->
+      <div class="processing" id="processing">
+        <div class="spinner"></div>
+        <p style="font-size:13px;color:var(--text-light);letter-spacing:0.08em;">Traitement en cours…</p>
+      </div>
+
+      <div class="modal-hd">
+        <h3 id="modalTitle">Informations de livraison</h3>
+        <button class="modal-x" onclick="closeCheckout()">×</button>
+      </div>
+      <div class="modal-bd">
+
+        <!-- ── STEP 1 : LIVRAISON ── -->
+        <div class="mstep active" id="ms1">
+          <span class="mlbl">① Vos coordonnées</span>
+          <div class="mgrid">
+            <div class="mfg"><label class="mfl">Prénom *</label><input class="mfi" id="fP" placeholder="Marie"/></div>
+            <div class="mfg"><label class="mfl">Nom *</label><input class="mfi" id="fN" placeholder="Dupont"/></div>
+          </div>
+          <div class="mgrid full">
+            <div class="mfg"><label class="mfl">Email *</label><input class="mfi" id="fE" type="email" placeholder="marie@email.com"/></div>
+          </div>
+          <div class="mgrid full">
+            <div class="mfg"><label class="mfl">Téléphone</label><input class="mfi" id="fT" type="tel" placeholder="06 12 34 56 78"/></div>
+          </div>
+          <span class="mlbl" style="margin-top:20px;">② Adresse de livraison</span>
+          <div class="mgrid full">
+            <div class="mfg"><label class="mfl">Adresse *</label><input class="mfi" id="fA" placeholder="12 rue des Fleurs"/></div>
+          </div>
+          <div class="mgrid">
+            <div class="mfg"><label class="mfl">Code postal *</label><input class="mfi" id="fCP" placeholder="75001" maxlength="10"/></div>
+            <div class="mfg"><label class="mfl">Ville *</label><input class="mfi" id="fV" placeholder="Paris"/></div>
+          </div>
+          <div class="mgrid full">
+            <div class="mfg"><label class="mfl">Pays</label>
+              <select class="mfi" id="fPa">
+                <option>France</option><option>Belgique</option><option>Suisse</option><option>Luxembourg</option>
+              </select>
+            </div>
+          </div>
+          <div class="mgrid full">
+            <div class="mfg"><label class="mfl">Note (optionnel)</label><input class="mfi" id="fNote" placeholder="Instructions particulières…"/></div>
+          </div>
+          <div class="mnav">
+            <button class="btn-outline" onclick="closeCheckout()" style="padding:10px 22px;">Annuler</button>
+            <button class="btn-primary" onclick="goStep(2)">Continuer →</button>
+          </div>
+        </div>
+
+        <!-- ── STEP 2 : PAIEMENT ── -->
+        <div class="mstep" id="ms2">
+          <!-- Recap -->
+          <div class="recap-box" id="recap"></div>
+
+          <span class="mlbl">③ Mode de paiement</span>
+          <div class="pay-tabs">
+            <div class="pay-tab active" id="tabCard" onclick="selPay('card')">
+              <div class="p-ico">💳</div><div class="p-lbl">Carte bancaire</div>
+            </div>
+            <div class="pay-tab" id="tabPaypal" onclick="selPay('paypal')">
+              <div class="p-ico">🅿️</div><div class="p-lbl">PayPal</div>
+            </div>
+          </div>
+
+          <!-- STRIPE PANEL -->
+          <div class="pay-panel active" id="panelCard">
+            <div class="mfg" style="margin-bottom:12px;">
+              <label class="mfl">Nom sur la carte</label>
+              <input class="mfi" id="cardName" placeholder="MARIE DUPONT"/>
+            </div>
+            <label class="mfl" style="margin-bottom:6px;">Numéro de carte</label>
+            <div class="stripe-wrap" id="stripeWrap">
+              <div id="stripe-card-element"></div>
+            </div>
+            <div id="stripe-card-errors"></div>
+            <div class="stripe-secure">🔒 Paiement sécurisé par <strong>Stripe</strong> — vos données ne transitent pas par nos serveurs</div>
+            <div class="stripe-badges">
+              <span class="stripe-badge">VISA</span>
+              <span class="stripe-badge">Mastercard</span>
+              <span class="stripe-badge">CB</span>
+              <span class="stripe-badge">American Express</span>
+            </div>
+            <div class="mnav">
+              <button class="btn-outline" onclick="goStep(1)" style="padding:10px 22px;">← Retour</button>
+              <button class="btn-primary" id="btnPay" onclick="payWithStripe()">Payer maintenant →</button>
+            </div>
+          </div>
+
+          <!-- PAYPAL PANEL -->
+          <div class="pay-panel" id="panelPaypal">
+            <div class="paypal-note">Vous serez redirigé(e) vers PayPal pour finaliser le paiement en toute sécurité. Aucune information bancaire ne vous sera demandée ici.</div>
+            <div id="paypal-button-container"></div>
+            <div class="mnav" style="margin-top:16px;">
+              <button class="btn-outline" onclick="goStep(1)" style="padding:10px 22px;">← Retour</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STEP 3 : CONFIRMATION ── -->
+        <div class="mstep" id="ms3">
+          <div class="success-wrap">
+            <div class="s-ico">🎀</div>
+            <h3>Commande confirmée !</h3>
+            <p>Un email de confirmation a été envoyé à</p>
+            <p><strong id="confEmail" style="color:var(--text);font-size:15px;"></strong></p>
+            <div class="next-box">
+              <p style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Prochaines étapes</p>
+              <p>🧵 <strong>Fabrication :</strong> 3 à 4 semaines dans notre atelier</p>
+              <p>📦 <strong>Expédition :</strong> email de suivi dès l'envoi</p>
+              <p>💬 <strong>Questions ?</strong> contact@edenellecreation.com</p>
+            </div>
+            <button class="btn-primary" onclick="orderDone()">Retour à la boutique</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer><div id="site-footer"></div></footer>
+
+  <script src="products.js"></script>
+  <script src="components.js"></script>
+  <script>
+    /* ══════════════════════════════════════════
+       ⚙️  CONFIGURATION — À personnaliser
+       ══════════════════════════════════════════
+       1. Remplacez YOUR_STRIPE_PUBLISHABLE_KEY par votre clé publique Stripe
+          (dashboard.stripe.com → Développeurs → Clés API)
+       2. Dans la balise <script> PayPal en haut de page,
+          remplacez YOUR_PAYPAL_CLIENT_ID par votre Client ID PayPal
+          (developer.paypal.com → Apps & Credentials)
+    */
+    const STRIPE_KEY = 'YOUR_STRIPE_PUBLISHABLE_KEY'; // pk_live_xxxx ou pk_test_xxxx
+
+    // Codes promo valides
+    const PROMOS = { BIENVENUE10: 10, LIVRAISON: 'ship', EDENELLE15: 15 };
+
+    /* ──────────────────────────────────────── */
+
+    let promoCode = null, promoDisc = 0, promoType = null;
+    let shipCost = 3.99, shipName = 'Mondial Relay';
+    let stripe = null, cardElement = null;
+    let paypalRendered = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNav(''); renderFooter();
+      buildCart();
+      initStripe();
+    });
+
+    // ── CART BUILD ──
+    function fmt(n) { return n.toFixed(2).replace('.', ',') + ' €'; }
+
+    function buildCart() {
+      const items = Cart.items;
+      document.getElementById('cartNb').textContent = items.length ? items.length + ' article' + (items.length > 1 ? 's' : '') : '';
+      const el = document.getElementById('cartRows');
+      if (!items.length) {
+        el.innerHTML = `<div class="empty-state"><div class="big">🛍️</div><p>Votre panier est vide</p><a href="catalogue.html" class="btn-primary">Découvrir nos créations</a></div>`;
+        ['promoRow','delaiBox'].forEach(id => document.getElementById(id).style.display = 'none');
+        document.getElementById('btnCo').disabled = true;
+        updateSummary(); return;
+      }
+      el.innerHTML = items.map((it, i) => `
+        <div class="cart-row">
+          <div class="c-thumb">🧸</div>
+          <div>
+            <div class="c-name">${it.name}</div>
+            <div class="c-perso">
+              ${it.prenom ? `<span>✏️ ${it.prenom}</span>` : ''}
+              ${it.couleur ? `<span>🧵 ${it.couleur}</span>` : ''}
+              ${it.police ? `<span>✍️ ${it.police}</span>` : ''}
+            </div>
+            <div class="qty-c">
+              <button class="qty-b" onclick="chQ(${i},-1)">−</button>
+              <input class="qty-v" type="number" value="${it.qty||1}" min="1" max="10" onchange="setQ(${i},this.value)"/>
+              <button class="qty-b" onclick="chQ(${i},1)">+</button>
+            </div>
+          </div>
+          <div class="c-right">
+            <span class="c-price">${fmt(it.price*(it.qty||1))}</span>
+            <button class="c-del" onclick="rmIt(${i})">×</button>
+          </div>
+        </div>`).join('');
+      updateSummary();
+    }
+
+    function chQ(i, d) { Cart.items[i].qty = Math.max(1, Math.min(10, (Cart.items[i].qty||1)+d)); Cart.save(); buildCart(); }
+    function setQ(i, v) { Cart.items[i].qty = Math.max(1, Math.min(10, parseInt(v)||1)); Cart.save(); buildCart(); }
+    function rmIt(i) { Cart.remove(i); buildCart(); }
+
+    function getSubtotal() { return Cart.items.reduce((s,i) => s+(i.price*(i.qty||1)),0); }
+
+    function updateSummary() {
+      const sub = getSubtotal();
+      const freeShip = sub >= 130 && shipName === 'Mondial Relay';
+      const effShip = (freeShip || promoType === 'ship') ? 0 : shipCost;
+      if (freeShip) document.getElementById('mrLbl').innerHTML = '<span style="color:#2E7D32;">Gratuit 🎉</span>';
+      else document.getElementById('mrLbl').textContent = '3,99 €';
+      const disc = promoType === 'pct' ? sub * promoDisc / 100 : 0;
+      const total = Math.max(0, sub - disc + effShip);
+      document.getElementById('sumSub').textContent = fmt(sub);
+      document.getElementById('sumShipName').textContent = shipName;
+      document.getElementById('sumShipVal').innerHTML = effShip === 0 ? '<span style="color:#2E7D32;">Gratuit</span>' : fmt(effShip);
+      document.getElementById('sumTotal').textContent = fmt(total);
+      if (disc > 0) {
+        document.getElementById('sumPromoLine').style.display = 'flex';
+        document.getElementById('sumPromoCd').textContent = '(' + promoCode + ')';
+        document.getElementById('sumPromoAmt').textContent = '−' + fmt(disc);
+      }
+    }
+
+    function setSh(el, cost, name) {
+      document.querySelectorAll('.ship-opt').forEach(o => o.classList.remove('active'));
+      el.classList.add('active'); shipCost = cost; shipName = name; updateSummary();
+    }
+
+    function applyPromo() {
+      const code = document.getElementById('promoInp').value.trim().toUpperCase();
+      const val = PROMOS[code];
+      if (!val) { alert('Code promo invalide.'); return; }
+      promoCode = code;
+      const sub = getSubtotal();
+      if (val === 'ship') { promoType = 'ship'; promoDisc = 0; document.getElementById('promoMsg').textContent = 'Livraison offerte appliquée !'; }
+      else { promoType = 'pct'; promoDisc = val; document.getElementById('promoMsg').textContent = `−${val}% appliqué (${fmt(sub*val/100)} économisés)`; }
+      document.getElementById('promoOk').classList.add('show');
+      document.getElementById('promoRow').style.display = 'none';
+      updateSummary();
+    }
+
+    // ── STRIPE INIT ──
+    function initStripe() {
+      if (STRIPE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') return; // skip if not configured
+      try {
+        stripe = Stripe(STRIPE_KEY);
+        const elements = stripe.elements({ locale: 'fr' });
+        cardElement = elements.create('card', {
+          style: {
+            base: { fontFamily: '"Jost", sans-serif', fontSize: '14px', color: '#3A2E2A', '::placeholder': { color: '#C4AFA3' } },
+            invalid: { color: '#c0392b' }
+          },
+          hidePostalCode: true
+        });
+        cardElement.mount('#stripe-card-element');
+        cardElement.on('focus', () => document.getElementById('stripeWrap').classList.add('focused'));
+        cardElement.on('blur', () => document.getElementById('stripeWrap').classList.remove('focused'));
+        cardElement.on('change', e => { document.getElementById('stripe-card-errors').textContent = e.error ? e.error.message : ''; });
+      } catch(e) { console.warn('Stripe init failed:', e); }
+    }
+
+    // ── CHECKOUT FLOW ──
+    function openCheckout() {
+      if (!Cart.items.length) return;
+      goStep(1);
+      document.getElementById('overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCheckout() {
+      document.getElementById('overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function goStep(n) {
+      if (n === 2) {
+        const required = [
+          {id:'fP',name:'prénom'},{id:'fN',name:'nom'},{id:'fE',name:'email'},
+          {id:'fA',name:'adresse'},{id:'fCP',name:'code postal'},{id:'fV',name:'ville'}
+        ];
+        for (const {id} of required) {
+          const el = document.getElementById(id);
+          if (!el.value.trim()) { el.classList.add('err'); el.focus(); setTimeout(()=>el.classList.remove('err'),1500); return; }
+        }
+        const emailEl = document.getElementById('fE');
+        if (!/^\S+@\S+\.\S+$/.test(emailEl.value)) { emailEl.classList.add('err'); emailEl.focus(); setTimeout(()=>emailEl.classList.remove('err'),1500); return; }
+        buildRecap();
+        document.getElementById('modalTitle').textContent = 'Paiement sécurisé';
+        setStepDone(1); setStepActive(2);
+        renderPayPal();
+      }
+      if (n === 3) {
+        document.getElementById('confEmail').textContent = document.getElementById('fE').value;
+        document.getElementById('modalTitle').textContent = 'Commande confirmée !';
+        [1,2,3].forEach(i => setStepDone(i)); setStepActive(4);
+      }
+      if (n === 1) {
+        document.getElementById('modalTitle').textContent = 'Informations de livraison';
+        setStepActive(1);
+      }
+      document.querySelectorAll('.mstep').forEach(s => s.classList.remove('active'));
+      document.getElementById('ms'+n).classList.add('active');
+    }
+
+    function setStepDone(n) { const el=document.getElementById('cs'+n); el.classList.add('done'); el.classList.remove('active'); }
+    function setStepActive(n) { const el=document.getElementById('cs'+n); el.classList.add('active'); el.classList.remove('done'); }
+
+    function buildRecap() {
+      const sub = getSubtotal();
+      const effShip = (getSubtotal()>=130&&shipName==='Mondial Relay'||promoType==='ship') ? 0 : shipCost;
+      const disc = promoType==='pct' ? sub*promoDisc/100 : 0;
+      const total = Math.max(0, sub-disc+effShip);
+      document.getElementById('recap').innerHTML = `
+        <div class="recap-line"><span>Pour</span><span>${document.getElementById('fP').value} ${document.getElementById('fN').value}</span></div>
+        <div class="recap-line"><span>Adresse</span><span>${document.getElementById('fA').value}, ${document.getElementById('fCP').value} ${document.getElementById('fV').value}</span></div>
+        <div class="recap-line"><span>Transport</span><span>${shipName}</span></div>
+        ${disc>0?`<div class="recap-line" style="color:#2E7D32;"><span>Réduction (${promoCode})</span><span>−${fmt(disc)}</span></div>`:''}
+        <div class="recap-line"><span>Livraison</span><span>${effShip===0?'Gratuit':fmt(effShip)}</span></div>
+        <div class="recap-line total"><span>Total</span><span>${fmt(total)}</span></div>`;
+    }
+
+    function selPay(method) {
+      document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab'+method.charAt(0).toUpperCase()+method.slice(1)).classList.add('active');
+      document.getElementById('panel'+method.charAt(0).toUpperCase()+method.slice(1)).classList.add('active');
+    }
+
+    // ── STRIPE PAYMENT ──
+    async function payWithStripe() {
+      if (!stripe || !cardElement) {
+        // Mode démo (clé non configurée)
+        showProcessing();
+        setTimeout(() => { hideProcessing(); goStep(3); }, 1800);
+        return;
+      }
+      const name = document.getElementById('cardName').value.trim();
+      if (!name) { document.getElementById('cardName').classList.add('err'); document.getElementById('cardName').focus(); setTimeout(()=>document.getElementById('cardName').classList.remove('err'),1500); return; }
+      showProcessing();
+      document.getElementById('btnPay').disabled = true;
+      try {
+        /*
+         * ══ INTÉGRATION STRIPE ══
+         * Pour le paiement réel, vous avez besoin d'un backend qui crée un PaymentIntent.
+         * Avec Netlify, utilisez une Netlify Function :
+         *
+         * netlify/functions/create-payment-intent.js :
+         *   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+         *   exports.handler = async (event) => {
+         *     const { amount } = JSON.parse(event.body);
+         *     const intent = await stripe.paymentIntents.create({ amount, currency: 'eur' });
+         *     return { statusCode: 200, body: JSON.stringify({ clientSecret: intent.client_secret }) };
+         *   };
+         *
+         * Ensuite décommentez ce bloc :
+         */
+        /*
+        const sub = getSubtotal();
+        const effShip = (sub>=130&&shipName==='Mondial Relay'||promoType==='ship')?0:shipCost;
+        const disc = promoType==='pct'?sub*promoDisc/100:0;
+        const totalCents = Math.round(Math.max(0,sub-disc+effShip)*100);
+
+        const res = await fetch('/.netlify/functions/create-payment-intent', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ amount: totalCents })
+        });
+        const { clientSecret } = await res.json();
+
+        const result = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: { name, email: document.getElementById('fE').value }
+          }
+        });
+        if (result.error) { document.getElementById('stripe-card-errors').textContent = result.error.message; hideProcessing(); document.getElementById('btnPay').disabled=false; return; }
+        */
+
+        // Simulation pour démo
+        await new Promise(r => setTimeout(r, 1600));
+        hideProcessing();
+        goStep(3);
+      } catch(e) {
+        document.getElementById('stripe-card-errors').textContent = 'Erreur lors du paiement. Veuillez réessayer.';
+        hideProcessing();
+        document.getElementById('btnPay').disabled = false;
+      }
+    }
+
+    // ── PAYPAL ──
+    function renderPayPal() {
+      if (paypalRendered) return;
+      if (typeof paypal === 'undefined') {
+        document.getElementById('paypal-button-container').innerHTML = '<p style="font-size:13px;color:var(--text-light);padding:12px 0;">PayPal non disponible — configurez votre Client ID en haut de la page.</p>';
+        return;
+      }
+      paypalRendered = true;
+      const sub = getSubtotal();
+      const effShip = (sub>=130&&shipName==='Mondial Relay'||promoType==='ship')?0:shipCost;
+      const disc = promoType==='pct'?sub*promoDisc/100:0;
+      const total = Math.max(0, sub-disc+effShip).toFixed(2);
+
+      paypal.Buttons({
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay', height: 44 },
+        createOrder(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: { value: total, currency_code: 'EUR' },
+              description: 'Commande Edenelle Création'
+            }]
+          });
+        },
+        onApprove(data, actions) {
+          showProcessing();
+          return actions.order.capture().then(() => { hideProcessing(); goStep(3); });
+        },
+        onError(err) { console.error('PayPal error:', err); alert('Erreur PayPal. Veuillez réessayer.'); }
+      }).render('#paypal-button-container');
+    }
+
+    function showProcessing() { document.getElementById('processing').classList.add('show'); }
+    function hideProcessing() { document.getElementById('processing').classList.remove('show'); }
+
+    function orderDone() {
+      Cart.items = []; Cart.save(); Cart.updateCount();
+      closeCheckout(); window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

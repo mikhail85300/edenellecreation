@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edenelle Création | Broderies Personnalisées pour Bébés</title>
+  <meta name="description" content="Broderies personnalisées artisanales en Vendée. Couvertures, gigoteuses, doudous brodés au prénom de votre bébé. Cadeau de naissance unique."/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* HERO */
+    .hero { min-height: 90vh; background: linear-gradient(135deg,#F5EDE4 0%,#EDE0D4 45%,#E0D0C4 100%); display:flex; align-items:center; position:relative; overflow:hidden; }
+    .hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C4AFA3' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E"); }
+    .hero-inner { max-width:1280px; margin:0 auto; padding:80px 32px; position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+    .hero-eyebrow { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); font-weight:500; margin-bottom:20px; display:flex; align-items:center; gap:12px; }
+    .hero-eyebrow::before { content:''; width:40px; height:1px; background:var(--gold); display:block; }
+    .hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(42px,5.5vw,78px); font-weight:300; line-height:1.08; color:var(--text); margin-bottom:16px; }
+    .hero h1 em { color:var(--dark-taupe); }
+    .hero-sub { font-size:15px; color:var(--text-light); max-width:480px; margin:0 0 36px; line-height:1.8; }
+    .hero-ctas { display:flex; gap:14px; flex-wrap:wrap; }
+    .hero-right { position:relative; }
+    .hero-img-main { aspect-ratio:3/4; background:linear-gradient(145deg,#E8DDD4,#C4AFA3); border-radius:2px; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--dark-taupe); font-size:18px; }
+    .hero-img-accent { position:absolute; bottom:-24px; left:-24px; width:55%; aspect-ratio:1; background:var(--gold-light); border-radius:2px; z-index:-1; }
+    .hero-badge { position:absolute; top:20px; right:-16px; background:var(--text); color:var(--cream); padding:16px; text-align:center; }
+    .hero-badge strong { display:block; font-size:26px; font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--gold); }
+    .hero-badge span { font-size:10px; letter-spacing:0.1em; text-transform:uppercase; }
+
+    /* CATEGORIES */
+    .cat-section { background:var(--cream); }
+    .cat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:40px; }
+    .cat-card { position:relative; overflow:hidden; text-decoration:none; display:block; }
+    .cat-card:first-child { grid-column:span 2; }
+    .cat-bg { width:100%; aspect-ratio:4/3; background:linear-gradient(145deg,#EDE3DA,#C8B5A8); transition:transform 0.6s; display:block; }
+    .cat-card:first-child .cat-bg { aspect-ratio:16/9; }
+    .cat-card:hover .cat-bg { transform:scale(1.04); }
+    .cat-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(42,31,27,0.75) 0%,transparent 55%); }
+    .cat-content { position:absolute; bottom:0; left:0; right:0; padding:24px; color:white; }
+    .cat-content h3 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:400; margin-bottom:4px; }
+    .cat-content p { font-size:12px; opacity:0.85; margin-bottom:10px; }
+    .cat-link { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; display:inline-flex; align-items:center; gap:6px; color:var(--gold-light); }
+    .cat-link::after { content:'→'; }
+
+    /* STORY */
+    .story-section { background:var(--blush); }
+    .story-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+    .story-img { aspect-ratio:4/5; background:linear-gradient(145deg,#C4AFA3,#8C7B72); border-radius:2px; position:relative; }
+    .story-img::after { content:''; position:absolute; bottom:-20px; right:-20px; width:50%; aspect-ratio:1; background:var(--gold-light); z-index:-1; border-radius:2px; }
+    .story-quote { font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; line-height:1.7; color:var(--text); padding-left:20px; border-left:2px solid var(--gold); margin:24px 0; }
+    .story-sig { font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); }
+
+    /* STEPS */
+    .steps-section { background:var(--cream); }
+    .steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:48px; }
+    .step { background:var(--warm-white); padding:40px 32px; text-align:center; position:relative; }
+    .step-num { font-family:'Cormorant Garamond',serif; font-size:64px; font-weight:300; color:var(--gold-light); line-height:1; margin-bottom:20px; }
+    .step h3 { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; margin-bottom:10px; }
+    .step p { font-size:14px; color:var(--text-light); line-height:1.7; }
+
+    /* FEATURED PRODUCTS */
+    .featured-section { background:var(--warm-white); }
+    .products-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:40px; }
+
+    /* REVIEWS */
+    .reviews-section { background:var(--blush); }
+    .reviews-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap:wrap; gap:16px; }
+    .reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .review-card { background:var(--warm-white); padding:28px; }
+    .review-text { font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; line-height:1.65; color:var(--text); margin-bottom:16px; }
+    .review-author { font-size:12px; color:var(--text-light); }
+    .review-check { color:var(--gold); font-size:11px; }
+
+    /* PROMISE */
+    .promise-section { background:var(--text); color:var(--cream); text-align:center; }
+    .promise-section .section-label { color:var(--gold); }
+    .promise-section .section-title { color:var(--cream); }
+    .promise-quote { font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; max-width:680px; margin:28px auto; color:var(--gold-light); line-height:1.75; }
+    .promise-sig { font-size:12px; color:var(--taupe); letter-spacing:0.1em; margin-bottom:40px; }
+    .promise-badges { display:flex; justify-content:center; gap:40px; flex-wrap:wrap; }
+    .pbadge { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--gold-light); letter-spacing:0.08em; }
+
+    /* QUIZ */
+    .quiz-section { background:var(--cream); }
+    .quiz-box { background:var(--warm-white); border:1px solid var(--border); padding:48px 40px; max-width:680px; margin:40px auto 0; text-align:center; }
+    .quiz-step { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--taupe); margin-bottom:20px; }
+    .quiz-q { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:300; margin-bottom:28px; }
+    .quiz-opts { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+    .quiz-opt { border:1px solid var(--border); background:var(--cream); padding:12px 20px; font-size:13px; cursor:pointer; transition:all 0.2s; font-family:'Jost',sans-serif; display:flex; align-items:center; gap:8px; }
+    .quiz-opt:hover, .quiz-opt.sel { border-color:var(--taupe); background:var(--blush); }
+    .quiz-result { margin-top:24px; display:none; }
+    .quiz-result.show { display:block; }
+
+    /* INSTAGRAM */
+    .insta-section { background:var(--warm-white); }
+    .insta-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-top:32px; }
+    .insta-cell { aspect-ratio:1; background:linear-gradient(145deg,var(--blush),var(--taupe)); position:relative; overflow:hidden; cursor:pointer; }
+    .insta-cell:nth-child(2) { background:linear-gradient(145deg,#DDD0C8,#C4B4AA); }
+    .insta-cell:nth-child(3) { background:linear-gradient(145deg,#E8E0D8,#CABDB4); }
+    .insta-cell:nth-child(4) { background:linear-gradient(145deg,#E4D8D0,#BDAD9E); }
+    .insta-cell:nth-child(5) { background:linear-gradient(145deg,#EDE3DA,#CFBFB4); }
+    .insta-cell:nth-child(6) { background:linear-gradient(145deg,#E0D8D0,#C8B5A8); }
+    .insta-over { position:absolute; inset:0; background:rgba(42,31,27,0.5); opacity:0; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; transition:opacity 0.3s; }
+    .insta-cell:hover .insta-over { opacity:1; }
+    .insta-footer { text-align:center; margin-top:24px; font-size:13px; color:var(--text-light); }
+    .insta-footer a { color:var(--text); text-decoration:none; }
+    .insta-footer a:hover { color:var(--gold); }
+
+    /* GIFT */
+    .gift-section { background:var(--blush); }
+    .gift-inner { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+    .gift-visual { aspect-ratio:1; background:linear-gradient(135deg,var(--gold-light),var(--gold)); display:flex; align-items:center; justify-content:center; }
+    .gift-visual-text { font-family:'Cormorant Garamond',serif; font-size:34px; font-style:italic; color:white; text-align:center; line-height:1.2; }
+
+    /* NEWSLETTER */
+    .nl-section { background:var(--text); color:var(--cream); text-align:center; padding:64px 32px; }
+    .nl-section h2 { font-family:'Cormorant Garamond',serif; font-size:38px; font-weight:300; margin-bottom:8px; }
+    .nl-section p { color:var(--gold-light); margin-bottom:28px; font-size:15px; }
+    .nl-form { display:flex; max-width:460px; margin:0 auto; }
+    .nl-input { flex:1; padding:14px 18px; border:1px solid var(--taupe); background:rgba(255,255,255,0.07); color:white; font-family:'Jost',sans-serif; font-size:14px; outline:none; }
+    .nl-input::placeholder { color:var(--taupe); }
+    .nl-btn { padding:14px 26px; background:var(--gold); color:var(--text); border:none; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; font-family:'Jost',sans-serif; cursor:pointer; transition:background 0.2s; white-space:nowrap; }
+    .nl-btn:hover { background:var(--gold-light); }
+
+    @media(max-width:1024px) {
+      .hero-inner { grid-template-columns:1fr; }
+      .hero-right { display:none; }
+      .story-grid { grid-template-columns:1fr; gap:40px; }
+      .gift-inner { grid-template-columns:1fr; gap:40px; }
+    }
+    @media(max-width:900px) {
+      .cat-grid { grid-template-columns:1fr 1fr; }
+      .cat-card:first-child { grid-column:span 2; }
+      .steps-grid { grid-template-columns:1fr; gap:2px; }
+      .products-grid { grid-template-columns:repeat(2,1fr); }
+      .reviews-grid { grid-template-columns:1fr; }
+      .insta-grid { grid-template-columns:repeat(3,1fr); }
+      .promise-badges { gap:20px; }
+    }
+    @media(max-width:600px) {
+      .cat-grid { grid-template-columns:1fr; }
+      .cat-card:first-child { grid-column:span 1; }
+      .products-grid { grid-template-columns:1fr; }
+      .hero-ctas { flex-direction:column; }
+      .quiz-box { padding:28px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+  <div id="badge-strip"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="hero-eyebrow">Broderie artisanale française</p>
+        <h1>Un prénom brodé,<br><em>un souvenir<br>pour toujours</em></h1>
+        <p class="hero-sub">Chaque création raconte l'histoire de votre famille. Broderie personnalisée, confectionnée avec amour dans notre atelier à Challans, en Vendée.</p>
+        <div class="hero-ctas">
+          <a href="catalogue.html" class="btn-primary">Découvrir nos créations</a>
+          <a href="carte-cadeau.html" class="btn-outline">Offrir une carte cadeau</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-img-main">Photo produit</div>
+        <div class="hero-img-accent"></div>
+        <div class="hero-badge">
+          <strong>4000+</strong>
+          <span>Clients satisfaits</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="cat-section section">
+    <div class="section-inner">
+      <p class="section-label">Nos univers</p>
+      <h2 class="section-title">Des créations pour <em>chaque instant</em></h2>
+      <div class="cat-grid">
+        <a href="catalogue.html?cat=packs" class="cat-card">
+          <div class="cat-bg" style="background:linear-gradient(145deg,#E8DDD4,#C4AFA3);"></div>
+          <div class="cat-overlay"></div>
+          <div class="cat-content"><h3>Packs Brodés</h3><p>Plusieurs créations brodées à prix avantageux</p><span class="cat-link">Découvrir</span></div>
+        </a>
+        <a href="catalogue.html?cat=couvertures" class="cat-card">
+          <div class="cat-bg" style="background:linear-gradient(145deg,#E0D4CC,#B8A89E);"></div>
+          <div class="cat-overlay"></div>
+          <div class="cat-content"><h3>Couvertures</h3><p>Douceur et chaleur, brodées de tendresse</p><span class="cat-link">Découvrir</span></div>
+        </a>
+        <a href="catalogue.html?cat=gigoteuses" class="cat-card">
+          <div class="cat-bg" style="background:linear-gradient(145deg,#EDE3DA,#C8B5A8);"></div>
+          <div class="cat-overlay"></div>
+          <div class="cat-content"><h3>Gigoteuses</h3><p>Des nuits sereines, signées de son prénom</p><span class="cat-link">Découvrir</span></div>
+        </a>
+        <a href="catalogue.html?cat=trousseau" class="cat-card">
+          <div class="cat-bg" style="background:linear-gradient(145deg,#E5D8CE,#BDAA9E);"></div>
+          <div class="cat-overlay"></div>
+          <div class="cat-content"><h3>Trousseau Naissance</h3><p>Tenues, doudous, et essentiels brodés</p><span class="cat-link">Découvrir</span></div>
+        </a>
+        <a href="catalogue.html?cat=accessoires" class="cat-card">
+          <div class="cat-bg" style="background:linear-gradient(145deg,#EAE0D8,#C2B0A6);"></div>
+          <div class="cat-overlay"></div>
+          <div class="cat-content"><h3>Accessoires</h3><p>Sacs, trousses et petites douceurs</p><span class="cat-link">Découvrir</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story-section section">
+    <div class="section-inner">
+      <div class="story-grid">
+        <div><div class="story-img"></div></div>
+        <div>
+          <p class="section-label">Notre histoire</p>
+          <h2 class="section-title">Derrière chaque broderie,<br><em>il y a une histoire</em></h2>
+          <blockquote class="story-quote">« Celle d'un premier souffle, d'un prénom murmuré, d'un regard émerveillé. Chez Edenelle, je confectionne chaque couverture et chaque doudou dans mon atelier à Challans, en Vendée. Chaque broderie est personnalisée avec soin pour que votre cadeau de naissance soit aussi unique que l'enfant qui le reçoit. »</blockquote>
+          <p class="story-sig">— Manon, fondatrice d'Edenelle Création</p>
+          <a href="a-propos.html" class="btn-outline" style="margin-top:28px;">Découvrir notre histoire</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="steps-section section">
+    <div class="section-inner">
+      <p class="section-label" style="text-align:center;">Comment ça marche</p>
+      <h2 class="section-title" style="text-align:center;">Votre cadeau personnalisé <em>en 3 étapes</em></h2>
+      <div class="steps-grid">
+        <div class="step"><div class="step-num">01</div><h3>Choisissez</h3><p>Sélectionnez votre article parmi nos créations brodées artisanalement en Vendée</p></div>
+        <div class="step"><div class="step-num">02</div><h3>Personnalisez</h3><p>Indiquez le prénom, choisissez la police et la couleur du fil parmi nos 27 teintes</p></div>
+        <div class="step"><div class="step-num">03</div><h3>Recevez</h3><p>Votre création brodée arrive chez vous sous 3 à 4 semaines, soigneusement emballée</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="featured-section section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div><p class="section-label">Coup de cœur</p><h2 class="section-title">Nos créations <em>les plus aimées</em></h2></div>
+        <a href="catalogue.html" class="btn-outline" style="padding:10px 22px;font-size:10px;">Voir tout</a>
+      </div>
+      <div class="products-grid" id="featuredProducts"></div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="reviews-section section">
+    <div class="section-inner">
+      <div class="reviews-header">
+        <div><p class="section-label">Avis clients</p><h2 class="section-title">Ce qu'elles <em>en disent</em></h2></div>
+        <div style="text-align:right;">
+          <div class="stars" style="font-size:18px;">★★★★★</div>
+          <p style="font-size:12px;color:var(--text-light);margin-top:4px;">+4000 clients satisfaits</p>
+          <a href="https://fr.trustpilot.com/review/edenellecreation.com" target="_blank" style="font-size:11px;color:var(--gold);text-decoration:none;letter-spacing:0.08em;">Voir tous les avis →</a>
+        </div>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card"><div class="stars" style="font-size:13px;margin-bottom:14px;">★★★★★</div><p class="review-text">« J'ai déjà commandé plusieurs fois et à chaque fois je suis super satisfaite. Super qualité des produits, bel emballage et surtout je salue la gentillesse d'Edenelle Création qui m'a renvoyé un doudou personnalisé pour mon fils en une soirée lorsqu'il l'avait perdu ! »</p><p class="review-author">Marie &nbsp;<span class="review-check">✓ Avis vérifié Trustpilot</span></p></div>
+        <div class="review-card"><div class="stars" style="font-size:13px;margin-bottom:14px;">★★★★★</div><p class="review-text">« Une créatrice incroyable, avec des produits d'une qualité parfaite. Son professionnalisme et son amour pour ce qu'elle fait se ressentent dans chacune de ses créations. »</p><p class="review-author">Sophie &nbsp;<span class="review-check">✓ Avis vérifié Trustpilot</span></p></div>
+        <div class="review-card"><div class="stars" style="font-size:13px;margin-bottom:14px;">★★★★★</div><p class="review-text">« Très bonne qualité et surtout les finitions sont très bien faites. Un cadeau parfait pour une naissance, la maman était ravie ! »</p><p class="review-author">Camille &nbsp;<span class="review-check">✓ Avis vérifié Trustpilot</span></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMISE -->
+  <section class="promise-section section">
+    <div class="section-inner" style="text-align:center;">
+      <p class="section-label">Notre promesse</p>
+      <h2 class="section-title">Satisfaite ou <em style="color:var(--gold-light);">remboursée</em></h2>
+      <p class="promise-quote">« Je mets un point d'honneur à ce que chaque création quitte mon atelier dans un état parfait. Si vous n'êtes pas entièrement satisfaite de votre commande, je refais ou je rembourse — sans discussion. »</p>
+      <p class="promise-sig">— Manon, fondatrice d'Edenelle Création</p>
+      <div class="promise-badges">
+        <div class="pbadge">✅ Matières Oeko-Tex certifiées</div>
+        <div class="pbadge">🧵 Broderie vérifiée avant expédition</div>
+        <div class="pbadge">🎁 Emballage cadeau soigné</div>
+        <div class="pbadge">💛 Satisfaite ou remboursée</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="quiz-section section">
+    <div class="section-inner">
+      <p class="section-label" style="text-align:center;">Aide au choix</p>
+      <h2 class="section-title" style="text-align:center;">Besoin d'aide pour <em>choisir ?</em></h2>
+      <div class="quiz-box">
+        <div id="quizContent">
+          <p class="quiz-step">Étape 1 / 3</p>
+          <h3 class="quiz-q">Pour quelle occasion ?</h3>
+          <div class="quiz-opts">
+            <button class="quiz-opt" onclick="quizNext(this,'naissance')">🎀 Cadeau de naissance</button>
+            <button class="quiz-opt" onclick="quizNext(this,'shower')">🥂 Baby shower</button>
+            <button class="quiz-opt" onclick="quizNext(this,'bapteme')">✝️ Baptême</button>
+            <button class="quiz-opt" onclick="quizNext(this,'anniversaire')">🎂 Anniversaire</button>
+          </div>
+        </div>
+        <div class="quiz-result" id="quizResult">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;margin-bottom:20px;">Notre suggestion pour vous ✨</p>
+          <div id="quizSuggestion"></div>
+          <a href="catalogue.html" class="btn-primary" style="margin-top:20px;">Voir toutes nos créations</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM -->
+  <section class="insta-section section">
+    <div class="section-inner">
+      <p class="section-label" style="text-align:center;">Instagram</p>
+      <h2 class="section-title" style="text-align:center;">Suivez nos <em>créations</em></h2>
+      <div class="insta-grid">
+        <div class="insta-cell"><div class="insta-over">📷</div></div>
+        <div class="insta-cell"><div class="insta-over">📷</div></div>
+        <div class="insta-cell"><div class="insta-over">📷</div></div>
+        <div class="insta-cell"><div class="insta-over">📷</div></div>
+        <div class="insta-cell"><div class="insta-over">📷</div></div>
+        <div class="insta-cell"><div class="insta-over">📷</div></div>
+      </div>
+      <p class="insta-footer">
+        <a href="https://www.instagram.com/edenellecreation/" target="_blank">@edenellecreation</a>
+        &nbsp;·&nbsp;
+        <a href="https://www.instagram.com/edenellecreation/" target="_blank" style="color:var(--gold);">Nous suivre sur Instagram →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- GIFT CARD -->
+  <section class="gift-section section" id="cadeau">
+    <div class="section-inner">
+      <div class="gift-inner">
+        <div class="gift-visual">
+          <div class="gift-visual-text">Carte<br/>Cadeau<br/><span style="font-size:18px;font-family:'Jost',sans-serif;font-weight:300;font-style:normal;letter-spacing:0.1em;">Edenelle Création</span></div>
+        </div>
+        <div>
+          <p class="section-label">Une idée cadeau parfaite</p>
+          <h2 class="section-title">La carte cadeau <em>Edenelle</em></h2>
+          <p style="color:var(--text-light);margin:20px 0 32px;font-size:15px;line-height:1.8;">Célébrez l'arrivée d'un nouveau-né avec notre carte cadeau. Offrez la liberté de choisir — un geste simple et profondément attentionné. Disponible à partir de 30€.</p>
+          <a href="carte-cadeau.html" class="btn-primary">Offrir une carte cadeau</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="nl-section">
+    <h2>Recevez nos nouvelles créations <em style="font-family:'Cormorant Garamond',serif;">en avant-première</em></h2>
+    <p>Inscrivez-vous et profitez de <strong>−10%</strong> sur votre première commande</p>
+    <div class="nl-form">
+      <input type="email" class="nl-input" placeholder="Votre adresse email" id="nlEmail"/>
+      <button class="nl-btn" onclick="subscribe()">S'inscrire</button>
+    </div>
+  </section>
+
+  <footer><div id="site-footer"></div></footer>
+
+  <script src="products.js"></script>
+  <script src="components.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNav('');
+      renderBadgeStrip();
+      renderFooter();
+      renderFeatured();
+    });
+
+    function renderFeatured() {
+      const featured = ['pack-flowers','pack-lapinou','sac-dos-beige','set-baby-bath'];
+      const grid = document.getElementById('featuredProducts');
+      featured.forEach(id => {
+        const p = getProductById(id);
+        if (!p) return;
+        grid.innerHTML += `
+          <a href="produit.html?id=${p.id}" class="product-card">
+            <div class="product-img-wrap">
+              <div class="product-img-placeholder">Photo produit</div>
+              ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+            </div>
+            <div class="product-info">
+              <p class="product-cat">${p.cat}</p>
+              <h3 class="product-name">${p.name}</h3>
+              <div class="product-prices">
+                <span class="price-current">${p.price.toFixed(2).replace('.',',')} €</span>
+                ${p.priceOriginal ? `<span class="price-original">${p.priceOriginal} €</span>` : ''}
+              </div>
+            </div>
+          </a>`;
+      });
+    }
+
+    const quizSuggestions = {
+      naissance: 'Pour un cadeau de naissance, nous recommandons nos <strong>Packs Brodés</strong> — plusieurs créations assorties à prix doux.',
+      shower: 'Pour une baby shower, découvrez nos <strong>Couvertures brodées</strong> ou nos <strong>Sets Bain</strong>.',
+      bapteme: 'Pour un baptême, notre <strong>Pack "Luxury"</strong> ou un <strong>Doudou Signature</strong> feront un cadeau élégant et mémorable.',
+      anniversaire: 'Pour un anniversaire, un <strong>Sac à dos brodé</strong> ou un <strong>Protège carnet</strong> sont des cadeaux pratiques et personnalisés.'
+    };
+
+    function quizNext(btn, choice) {
+      document.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      setTimeout(() => {
+        document.getElementById('quizContent').style.display = 'none';
+        document.getElementById('quizSuggestion').innerHTML = `<p style="font-size:15px;color:var(--text-light);line-height:1.8;">${quizSuggestions[choice]}</p>`;
+        document.getElementById('quizResult').classList.add('show');
+      }, 400);
+    }
+
+    function subscribe() {
+      const email = document.getElementById('nlEmail').value;
+      if (!email || !email.includes('@')) { alert('Veuillez entrer une adresse email valide.'); return; }
+      alert(`Merci ! Vous êtes inscrit(e) avec ${email}.\nVotre code −10% : BIENVENUE10`);
+      document.getElementById('nlEmail').value = '';
+    }
+  </script>
+</body>
+</html>

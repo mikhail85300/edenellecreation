@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catalogue | Edenelle Création</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .catalogue-layout { max-width:1280px; margin:0 auto; padding:40px 32px; display:grid; grid-template-columns:260px 1fr; gap:40px; align-items:start; }
+    /* FILTERS */
+    .filters { position:sticky; top:90px; background:var(--warm-white); border:1px solid var(--border); padding:28px; }
+    .filter-title { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text); font-weight:500; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+    .filter-group { margin-bottom:24px; }
+    .filter-group h4 { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-light); margin-bottom:12px; font-family:'Jost'; font-weight:400; }
+    .filter-opt { display:flex; align-items:center; gap:10px; margin-bottom:8px; cursor:pointer; }
+    .filter-opt input { accent-color:var(--gold); width:14px; height:14px; cursor:pointer; }
+    .filter-opt label { font-size:13px; color:var(--text); cursor:pointer; }
+    .filter-opt label span { color:var(--text-light); font-size:11px; }
+    .price-range { width:100%; accent-color:var(--gold); }
+    .price-display { display:flex; justify-content:space-between; font-size:12px; color:var(--text-light); margin-top:8px; }
+    .filter-reset { font-size:11px; color:var(--taupe); text-decoration:none; letter-spacing:0.08em; cursor:pointer; display:block; text-align:center; margin-top:8px; }
+    .filter-reset:hover { color:var(--gold); }
+    /* CATALOGUE RIGHT */
+    .catalogue-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+    .cat-count { font-size:13px; color:var(--text-light); }
+    .sort-select { border:1px solid var(--border); background:var(--warm-white); padding:8px 14px; font-family:'Jost',sans-serif; font-size:12px; color:var(--text); cursor:pointer; outline:none; }
+    .cat-pills { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+    .cat-pill { border:1px solid var(--border); background:var(--warm-white); padding:7px 16px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; font-family:'Jost'; }
+    .cat-pill:hover, .cat-pill.active { border-color:var(--text); background:var(--text); color:var(--cream); }
+    .prod-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .load-more { display:block; margin:40px auto 0; padding:14px 40px; }
+    @media(max-width:900px) {
+      .catalogue-layout { grid-template-columns:1fr; }
+      .filters { position:static; }
+      .prod-grid { grid-template-columns:repeat(2,1fr); }
+    }
+    @media(max-width:500px) { .prod-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+  <div id="badge-strip"></div>
+
+  <div class="breadcrumb-wrap">
+    <div class="breadcrumb">
+      <a href="index.html">Accueil</a><span class="breadcrumb-sep">›</span>
+      <span id="breadcrumbCat">Tous les articles</span>
+    </div>
+  </div>
+
+  <div class="catalogue-layout">
+    <!-- FILTERS -->
+    <aside class="filters">
+      <p class="filter-title">Filtrer par</p>
+      <div class="filter-group">
+        <h4>Catégorie</h4>
+        <div class="filter-opt"><input type="checkbox" id="f-packs" onchange="filterProducts()"/><label for="f-packs">Packs brodés <span>(12)</span></label></div>
+        <div class="filter-opt"><input type="checkbox" id="f-couvertures" onchange="filterProducts()"/><label for="f-couvertures">Couvertures <span>(4)</span></label></div>
+        <div class="filter-opt"><input type="checkbox" id="f-gigoteuses" onchange="filterProducts()"/><label for="f-gigoteuses">Gigoteuses <span>(1)</span></label></div>
+        <div class="filter-opt"><input type="checkbox" id="f-trousseau" onchange="filterProducts()"/><label for="f-trousseau">Trousseau <span>(4)</span></label></div>
+        <div class="filter-opt"><input type="checkbox" id="f-sacs" onchange="filterProducts()"/><label for="f-sacs">Sacs & Pochettes <span>(6)</span></label></div>
+        <div class="filter-opt"><input type="checkbox" id="f-bain" onchange="filterProducts()"/><label for="f-bain">Bain & Peignoirs <span>(3)</span></label></div>
+        <div class="filter-opt"><input type="checkbox" id="f-doudous" onchange="filterProducts()"/><label for="f-doudous">Doudous <span>(2)</span></label></div>
+        <div class="filter-opt"><input type="checkbox" id="f-tenues" onchange="filterProducts()"/><label for="f-tenues">Tenues <span>(5)</span></label></div>
+        <div class="filter-opt"><input type="checkbox" id="f-accessoires" onchange="filterProducts()"/><label for="f-accessoires">Accessoires <span>(3)</span></label></div>
+      </div>
+      <div class="filter-group">
+        <h4>Prix maximum</h4>
+        <input type="range" class="price-range" min="0" max="320" value="320" id="priceRange" oninput="updatePrice(this)"/>
+        <div class="price-display"><span>0 €</span><span id="priceVal">320 €</span></div>
+      </div>
+      <a class="filter-reset" onclick="resetFilters()">Réinitialiser les filtres</a>
+    </aside>
+
+    <!-- PRODUCTS -->
+    <div>
+      <div class="cat-pills" id="catPills">
+        <button class="cat-pill active" onclick="setCat('all',this)">Tout</button>
+        <button class="cat-pill" onclick="setCat('packs',this)">Packs</button>
+        <button class="cat-pill" onclick="setCat('couvertures',this)">Couvertures</button>
+        <button class="cat-pill" onclick="setCat('gigoteuses',this)">Gigoteuses</button>
+        <button class="cat-pill" onclick="setCat('sacs',this)">Sacs</button>
+        <button class="cat-pill" onclick="setCat('bain',this)">Bain</button>
+        <button class="cat-pill" onclick="setCat('doudous',this)">Doudous</button>
+        <button class="cat-pill" onclick="setCat('tenues',this)">Tenues</button>
+        <button class="cat-pill" onclick="setCat('accessoires',this)">Accessoires</button>
+      </div>
+      <div class="catalogue-top">
+        <p class="cat-count"><span id="prodCount">0</span> articles</p>
+        <select class="sort-select" onchange="sortProducts(this.value)">
+          <option value="default">Trier par défaut</option>
+          <option value="price-asc">Prix croissant</option>
+          <option value="price-desc">Prix décroissant</option>
+          <option value="name">Nom A–Z</option>
+        </select>
+      </div>
+      <div class="prod-grid" id="prodGrid"></div>
+      <button class="btn-outline load-more" id="loadMoreBtn" onclick="loadMore()">Voir plus</button>
+    </div>
+  </div>
+
+  <footer><div id="site-footer"></div></footer>
+
+  <script src="products.js"></script>
+  <script src="components.js"></script>
+  <script>
+    let currentCat = 'all';
+    let maxPrice = 320;
+    let displayCount = 12;
+    let sortMode = 'default';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNav('');
+      renderBadgeStrip();
+      renderFooter();
+      // Check URL params
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('cat');
+      if (cat) {
+        currentCat = cat;
+        document.querySelectorAll('.cat-pill').forEach(p => {
+          p.classList.toggle('active', p.textContent.toLowerCase().includes(cat) || (cat==='all' && p.textContent==='Tout'));
+        });
+        document.getElementById('breadcrumbCat').textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+      }
+      renderProducts();
+    });
+
+    function getFiltered() {
+      let prods = currentCat === 'all' ? [...PRODUCTS] : PRODUCTS.filter(p => p.cat === currentCat);
+      prods = prods.filter(p => p.price <= maxPrice);
+      if (sortMode === 'price-asc') prods.sort((a,b) => a.price - b.price);
+      if (sortMode === 'price-desc') prods.sort((a,b) => b.price - a.price);
+      if (sortMode === 'name') prods.sort((a,b) => a.name.localeCompare(b.name));
+      return prods;
+    }
+
+    function renderProducts() {
+      const prods = getFiltered();
+      const grid = document.getElementById('prodGrid');
+      const shown = prods.slice(0, displayCount);
+      document.getElementById('prodCount').textContent = prods.length;
+      grid.innerHTML = shown.map(p => `
+        <a href="produit.html?id=${p.id}" class="product-card">
+          <div class="product-img-wrap">
+            <div class="product-img-placeholder">Photo produit</div>
+            ${p.badge ? `<span class="product-badge${p.priceOriginal?' promo':''}">${p.badge}</span>` : ''}
+          </div>
+          <div class="product-info">
+            <p class="product-cat">${p.cat}</p>
+            <h3 class="product-name">${p.name}</h3>
+            <div class="product-prices">
+              <span class="price-current">${p.price.toFixed(2).replace('.',',')} €</span>
+              ${p.priceOriginal ? `<span class="price-original">${p.priceOriginal} €</span>` : ''}
+            </div>
+          </div>
+        </a>`).join('');
+      document.getElementById('loadMoreBtn').style.display = prods.length > displayCount ? 'block' : 'none';
+    }
+
+    function setCat(cat, btn) {
+      currentCat = cat;
+      displayCount = 12;
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      renderProducts();
+    }
+
+    function filterProducts() { displayCount = 12; renderProducts(); }
+    function sortProducts(val) { sortMode = val; renderProducts(); }
+    function loadMore() { displayCount += 12; renderProducts(); }
+    function updatePrice(el) { maxPrice = parseInt(el.value); document.getElementById('priceVal').textContent = maxPrice + ' €'; renderProducts(); }
+    function resetFilters() { maxPrice = 320; document.getElementById('priceRange').value = 320; document.getElementById('priceVal').textContent = '320 €'; currentCat = 'all'; document.querySelectorAll('.cat-pill').forEach((p,i) => p.classList.toggle('active', i===0)); renderProducts(); }
+  </script>
+</body>
+</html>

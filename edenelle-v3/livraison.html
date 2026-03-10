@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Livraison & Délais | Edenelle Création</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .page-wrap { max-width:820px; margin:0 auto; padding:60px 32px 100px; }
+    .page-intro { margin-bottom:40px; }
+    .page-intro .section-label { margin-bottom:8px; }
+    .page-title { font-family:"Cormorant Garamond",serif; font-size:clamp(32px,5vw,52px); font-weight:300; line-height:1.15; }
+    .page-title em { color:var(--dark-taupe); }
+    .prose h2 { font-family:"Cormorant Garamond",serif; font-size:24px; font-weight:400; margin:36px 0 12px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+    .prose p { font-size:15px; color:var(--text-light); line-height:1.85; margin-bottom:14px; }
+    .prose ul { padding-left:20px; margin-bottom:16px; }
+    .prose li { font-size:15px; color:var(--text-light); line-height:1.85; margin-bottom:6px; }
+    .prose strong { color:var(--text); font-weight:500; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .form-group { margin-bottom:16px; }
+    .f-label { display:block; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--text); margin-bottom:8px; font-weight:500; }
+    .f-input, .f-select, .f-textarea { width:100%; border:1px solid var(--border); background:var(--warm-white); padding:12px 16px; font-family:"Jost",sans-serif; font-size:14px; color:var(--text); outline:none; transition:border-color 0.2s; }
+    .f-input:focus, .f-textarea:focus { border-color:var(--taupe); }
+    .f-textarea { min-height:130px; resize:vertical; }
+    .faq-item { border-bottom:1px solid var(--border); }
+    .faq-q { width:100%; display:flex; justify-content:space-between; align-items:center; padding:18px 0; background:none; border:none; cursor:pointer; font-family:"Cormorant Garamond",serif; font-size:18px; color:var(--text); text-align:left; gap:12px; }
+    .faq-q .ico { color:var(--taupe); font-size:22px; flex-shrink:0; transition:transform 0.2s; }
+    .faq-q.open .ico { transform:rotate(45deg); }
+    .faq-a { display:none; padding-bottom:16px; font-size:14px; color:var(--text-light); line-height:1.8; }
+    .faq-a.open { display:block; }
+    .amount-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+    .amount-btn { border:1px solid var(--border); background:var(--warm-white); padding:16px 8px; font-size:16px; font-family:"Cormorant Garamond",serif; cursor:pointer; transition:all 0.2s; }
+    .amount-btn:hover, .amount-btn.sel { border-color:var(--text); background:var(--text); color:var(--cream); }
+    .cart-item { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border); gap:16px; }
+    .cart-item-info p:first-child { font-family:"Cormorant Garamond",serif; font-size:18px; margin-bottom:4px; }
+    .cart-item-info p:last-child { font-size:12px; color:var(--text-light); }
+    .cart-remove { background:none; border:none; cursor:pointer; color:var(--taupe); font-size:22px; padding:4px; transition:color 0.2s; }
+    .cart-remove:hover { color:var(--error); }
+    @media(max-width:600px) { .form-row{grid-template-columns:1fr;} .amount-grid{grid-template-columns:repeat(2,1fr);} .page-wrap{padding:32px 20px 80px;} }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+  <div class="breadcrumb-wrap">
+    <div class="breadcrumb"><a href="index.html">Accueil</a><span class="breadcrumb-sep">›</span><span>Livraison & Délais</span></div>
+  </div>
+  <div class="page-wrap">
+    <div class="page-intro">
+      <span class="section-label">Livraison</span>
+      <h1 class="page-title" id="pageTitle"></h1>
+    </div>
+    <div id="pageBody"></div>
+  </div>
+  <footer><div id="site-footer"></div></footer>
+  <script src="products.js"></script>
+  <script src="components.js"></script>
+  <script>
+    const PAGE = 'livraison';
+    document.addEventListener('DOMContentLoaded',()=>{ renderNav(''); renderFooter(); buildPage(PAGE); });
+    
+    const CONTENT = {
+      contact: {
+        title: 'Une question ? <em>Écrivez-nous</em>',
+        body: `<div class="prose"><p>Nous répondons à tous les messages sous 24 à 48h (hors week-ends).</p></div>
+          <div class="form-row">
+            <div class="form-group"><label class="f-label">Prénom</label><input class="f-input" placeholder="Votre prénom"/></div>
+            <div class="form-group"><label class="f-label">Nom</label><input class="f-input" placeholder="Votre nom"/></div>
+          </div>
+          <div class="form-group"><label class="f-label">Email</label><input class="f-input" type="email" placeholder="votre@email.com"/></div>
+          <div class="form-group"><label class="f-label">Sujet</label>
+            <select class="f-select f-input"><option>Question sur une commande</option><option>Question sur un produit</option><option>Délai de livraison</option><option>Autre</option></select>
+          </div>
+          <div class="form-group"><label class="f-label">Message</label><textarea class="f-textarea" placeholder="Votre message…"></textarea></div>
+          <button class="btn-primary" onclick="alert('Message envoyé ! Nous vous répondrons sous 48h.')">Envoyer</button>
+          <div class="prose" style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);">
+            <h2>Coordonnées</h2>
+            <p>📍 Challans, Vendée (85300) — France<br>📧 contact@edenellecreation.com<br>📱 <a href="https://www.instagram.com/edenellecreation/" style="color:var(--gold);">@edenellecreation</a></p>
+          </div>`
+      },
+      faq: {
+        title: 'Toutes vos <em>questions</em>',
+        body: '<div id="faqItems"></div>'
+      },
+      'a-propos': {
+        title: 'Derrière chaque broderie, <em>une histoire</em>',
+        body: `<div class="prose">
+          <p>Bienvenue chez Edenelle Création. Je suis Manon, et depuis 2021 je confectionne à la main, dans mon atelier à Challans en Vendée, des créations brodées personnalisées pour les nouveaux-nés.</p>
+          <p>Tout a commencé avec l'envie d'offrir des cadeaux de naissance vraiment uniques — des créations qui portent un prénom, une histoire, un lien entre les gens.</p>
+          <h2>Nos valeurs</h2>
+          <ul>
+            <li><strong>Artisanat français</strong> — Tout est fabriqué et brodé en Vendée, dans mon atelier.</li>
+            <li><strong>Matières sûres</strong> — Tous nos tissus sont certifiés Oeko-Tex, sans substances nocives.</li>
+            <li><strong>Personnalisation soignée</strong> — Chaque broderie est réalisée avec soin et vérifiée avant expédition.</li>
+            <li><strong>Satisfaite ou remboursée</strong> — Si vous n'êtes pas entièrement satisfaite, je refais ou je rembourse.</li>
+          </ul>
+          <h2>L'atelier</h2>
+          <p>Mon atelier est situé à Challans, en Vendée. Chaque pièce y est cousue, brodée et contrôlée avant d'être expédiée. Je travaille seule, ce qui me permet de maintenir un niveau d'exigence élevé sur chaque création.</p>
+        </div>`
+      },
+      'carte-cadeau': {
+        title: 'La carte cadeau <em>Edenelle</em>',
+        body: `<div class="prose"><p>La carte cadeau Edenelle Création permet de choisir librement parmi toutes nos créations brodées. Idéale quand on ne sait pas encore le prénom de bébé !</p></div>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:22px;margin:28px 0 16px;">Choisissez le montant</h2>
+          <div class="amount-grid">
+            <button class="amount-btn" onclick="selAmount(this,30)">30 €</button>
+            <button class="amount-btn" onclick="selAmount(this,50)">50 €</button>
+            <button class="amount-btn sel" onclick="selAmount(this,75)">75 €</button>
+            <button class="amount-btn" onclick="selAmount(this,100)">100 €</button>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="f-label">Pour</label><input class="f-input" placeholder="Prénom du/de la destinataire"/></div>
+            <div class="form-group"><label class="f-label">De la part de</label><input class="f-input" placeholder="Votre prénom"/></div>
+          </div>
+          <div class="form-group"><label class="f-label">Message personnalisé</label><textarea class="f-textarea" style="min-height:100px;" placeholder="Un petit mot pour accompagner le cadeau…"></textarea></div>
+          <button class="btn-primary" onclick="alert('Carte cadeau ajoutée au panier !')">Ajouter au panier — 75 €</button>`
+      },
+      panier: {
+        title: 'Votre <em>panier</em>',
+        body: '<div id="cartItems"></div>'
+      },
+      cgv: {
+        title: 'Conditions générales <em>de vente</em>',
+        body: `<div class="prose">
+          <h2>Article 1 — Objet</h2>
+          <p>Les présentes conditions générales de vente régissent les relations contractuelles entre Edenelle Création (SIRET n°94845473100019) et tout acheteur.</p>
+          <h2>Article 2 — Prix</h2>
+          <p>Les prix sont indiqués en euros TTC. Edenelle Création se réserve le droit de modifier ses prix à tout moment, les modifications n'étant pas applicables aux commandes déjà validées.</p>
+          <h2>Article 3 — Commandes</h2>
+          <p>Les articles personnalisés sont fabriqués sur commande. Le délai de confection est de 3 à 4 semaines. Toute commande personnalisée est définitive une fois la fabrication commencée.</p>
+          <h2>Article 4 — Livraison</h2>
+          <p>Livraison par Mondial Relay (3,99 €, offerte dès 130€ avec le code LIVRAISON) ou Colissimo (6,50 €). Délai en sus de la confection : 3 à 5 jours ouvrés.</p>
+          <h2>Article 5 — Retours</h2>
+          <p>Les articles personnalisés ne peuvent être retournés sauf défaut de fabrication. En cas de produit défectueux, nous remplaçons ou remboursons intégralement sous 14 jours.</p>
+          <h2>Article 6 — Données personnelles</h2>
+          <p>Les données collectées sont utilisées uniquement pour le traitement des commandes et ne sont pas transmises à des tiers. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression.</p>
+        </div>`
+      },
+      livraison: {
+        title: 'Livraison <em>& délais</em>',
+        body: `<div class="prose">
+          <h2>Délai de confection</h2>
+          <p>Chaque article étant confectionné et brodé à la main, le délai de fabrication est de <strong>3 à 4 semaines</strong> à compter de la validation de votre commande.</p>
+          <h2>Modes de livraison</h2>
+          <ul>
+            <li><strong>Mondial Relay</strong> — 3,99 € (gratuit dès 130 € avec le code LIVRAISON)</li>
+            <li><strong>Colissimo avec suivi</strong> — 6,50 €</li>
+            <li><strong>Livraison express</strong> — nous contacter</li>
+          </ul>
+          <h2>Zone de livraison</h2>
+          <p>France métropolitaine, Belgique, Suisse, Luxembourg. Pour d'autres destinations, contactez-nous.</p>
+          <h2>Suivi de commande</h2>
+          <p>Un email vous est envoyé à chaque étape : validation, fabrication en cours, expédition avec numéro de suivi.</p>
+        </div>`
+      },
+      confidentialite: {
+        title: 'Politique de <em>confidentialité</em>',
+        body: `<div class="prose">
+          <h2>Collecte des données</h2>
+          <p>Edenelle Création collecte vos données (nom, email, adresse) uniquement pour le traitement de vos commandes. Aucune donnée n'est revendue à des tiers.</p>
+          <h2>Vos droits</h2>
+          <p>Conformément au RGPD, vous pouvez à tout moment demander l'accès, la rectification ou la suppression de vos données en contactant contact@edenellecreation.com.</p>
+          <h2>Cookies</h2>
+          <p>Ce site utilise uniquement des cookies essentiels au fonctionnement (panier). Aucun cookie de tracking publicitaire n'est utilisé.</p>
+        </div>`
+      },
+      'mentions-legales': {
+        title: 'Mentions <em>légales</em>',
+        body: `<div class="prose">
+          <h2>Éditeur du site</h2>
+          <p>Edenelle Création<br>Manon — Auto-entrepreneur<br>SIRET n°94845473100019<br>Challans, Vendée (85300)</p>
+          <h2>Contact</h2>
+          <p>Email : contact@edenellecreation.com<br>Instagram : @edenellecreation</p>
+          <h2>Hébergement</h2>
+          <p>Ce site est hébergé par Netlify, Inc.</p>
+        </div>`
+      },
+      retours: {
+        title: 'Politique de <em>retour</em>',
+        body: `<div class="prose">
+          <h2>Articles personnalisés</h2>
+          <p>En raison de leur nature personnalisée, les créations brodées ne peuvent pas faire l'objet d'un retour ou remboursement sauf défaut de fabrication.</p>
+          <h2>Défaut de fabrication</h2>
+          <p>Si votre article présente un défaut (broderie incorrecte, tissu endommagé), nous le remplaçons ou vous remboursons intégralement. Contactez-nous sous 14 jours avec une photo.</p>
+          <h2>Articles non personnalisés</h2>
+          <p>Les articles non brodés peuvent être retournés sous 14 jours dans leur état d'origine. Les frais de retour sont à la charge du client.</p>
+        </div>`
+      }
+    };
+
+    const FAQS = [
+      ['Quel est le délai pour recevoir ma commande ?','Le délai de confection est de 3 à 4 semaines, auquel s'ajoute le délai de livraison (3 à 5 jours). Comptez donc 4 à 5 semaines au total.'],
+      ['Puis-je modifier ma commande après l'avoir passée ?','Vous pouvez modifier votre commande dans les 24h suivant la validation. Au-delà, la fabrication est en cours.'],
+      ['Combien de caractères puis-je broder ?','15 caractères maximum. Les accents sont adaptés selon la police pour un rendu optimal.'],
+      ['Les matières sont-elles sûres pour bébé ?','Oui ! Tous nos tissus sont certifiés Oeko-Tex Standard 100. Lavables en machine à 30°C.'],
+      ['Comment entretenir les articles brodés ?','Lavage en machine à 30°C, cycle délicat. Pas de sèche-linge. Repassage à l'envers.'],
+      ['Puis-je retourner un article personnalisé ?','Les articles personnalisés ne sont pas repris sauf défaut de fabrication.'],
+      ['La carte cadeau est-elle valable longtemps ?','La carte cadeau est valable 12 mois à compter de la date d'achat.'],
+      ['Livrez-vous à l'étranger ?','Oui, en Belgique, Suisse et Luxembourg. Pour d'autres pays, contactez-nous.'],
+    ];
+
+    function buildPage(page) {
+      const c = CONTENT[page];
+      if (!c) return;
+      document.getElementById('pageTitle').innerHTML = c.title;
+      document.getElementById('pageBody').innerHTML = c.body;
+      if (page === 'faq') buildFaq();
+      if (page === 'panier') buildCart();
+    }
+
+    function buildFaq() {
+      document.getElementById('faqItems').innerHTML = FAQS.map(([q,a]) => `
+        <div class="faq-item">
+          <button class="faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+            ${q}<span class="ico">+</span>
+          </button>
+          <div class="faq-a">${a}</div>
+        </div>`).join('');
+    }
+
+    function buildCart() {
+      const el = document.getElementById('cartItems');
+      if (!Cart.items.length) {
+        el.innerHTML = `<div style="text-align:center;padding:80px 20px;">
+          <p style="font-size:48px;margin-bottom:16px;">🛍️</p>
+          <p style="font-size:16px;color:var(--text-light);margin-bottom:28px;">Votre panier est vide.</p>
+          <a href="catalogue.html" class="btn-primary">Découvrir nos créations</a>
+        </div>`;
+        return;
+      }
+      el.innerHTML = Cart.items.map((item,i) => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <p>${item.name}</p>
+            <p>Prénom : ${item.prenom} · ${item.couleur} · ${item.police}</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <span style="font-size:16px;white-space:nowrap;">${item.price.toFixed(2).replace('.',',')} €</span>
+            <button class="cart-remove" onclick="Cart.remove(${i});location.reload();">×</button>
+          </div>
+        </div>`).join('')
+        + `<div style="text-align:right;margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:20px;">Total : ${Cart.total().replace('.',',')} €</p>
+          <button class="btn-primary" onclick="alert('Redirection vers le paiement…')">Commander →</button>
+        </div>`;
+    }
+
+    function selAmount(btn, amount) {
+      document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+    }
+  </script>
+</body>
+</html>
