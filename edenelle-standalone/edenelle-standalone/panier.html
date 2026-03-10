@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edenelle Création</title>
+  <style>
+/* ═══════════════════════════════════════════
+   EDENELLE CRÉATION — Global Stylesheet
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500&family=Dancing+Script:wght@500;700&family=Sacramento&family=Rochester&family=Great+Vibes&family=Pacifico&family=Satisfy&family=Italianno&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #FAF7F2;
+  --warm-white: #FFFEF9;
+  --blush: #F2E8E0;
+  --taupe: #C4AFA3;
+  --dark-taupe: #8C7B72;
+  --text: #3A2E2A;
+  --text-light: #7A6E6A;
+  --gold: #C9A96E;
+  --gold-light: #E8D5B0;
+  --border: #E8DDD5;
+  --error: #C0392B;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--text); font-weight: 300; line-height: 1.7; }
+
+/* ── TYPOGRAPHY ── */
+h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+em { font-style: italic; }
+
+.section-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 12px; display: block; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3.5vw, 46px); font-weight: 300; line-height: 1.2; color: var(--text); margin-bottom: 8px; }
+.section-title em { color: var(--dark-taupe); }
+
+/* ── BUTTONS ── */
+.btn-primary { background: var(--text); color: var(--cream); padding: 14px 32px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; font-family: 'Jost', sans-serif; font-weight: 400; border: none; cursor: pointer; transition: background 0.25s, transform 0.2s; display: inline-block; }
+.btn-primary:hover { background: var(--dark-taupe); transform: translateY(-1px); }
+.btn-outline { border: 1px solid var(--text); color: var(--text); padding: 14px 32px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; font-family: 'Jost', sans-serif; font-weight: 400; background: none; cursor: pointer; transition: background 0.25s, color 0.25s; display: inline-block; }
+.btn-outline:hover { background: var(--text); color: var(--cream); }
+.btn-gold { background: var(--gold); color: var(--text); padding: 14px 32px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; font-family: 'Jost', sans-serif; font-weight: 400; border: none; cursor: pointer; transition: background 0.2s; display: inline-block; }
+.btn-gold:hover { background: var(--gold-light); }
+
+/* ── TOP BANNER ── */
+.top-banner { background: var(--text); color: var(--gold-light); text-align: center; padding: 10px 20px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; overflow: hidden; }
+.banner-track { display: inline-flex; gap: 60px; animation: scroll-banner 25s linear infinite; white-space: nowrap; }
+@keyframes scroll-banner { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ── NAV ── */
+nav { background: var(--warm-white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 200; }
+.nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; letter-spacing: 0.08em; color: var(--text); text-decoration: none; flex-shrink: 0; }
+.nav-logo span { color: var(--gold); font-style: italic; }
+.nav-links { display: flex; gap: 0; list-style: none; }
+.nav-links > li { position: relative; }
+.nav-links > li > a { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); text-decoration: none; font-weight: 400; padding: 24px 16px; display: block; transition: color 0.2s; }
+.nav-links > li > a:hover { color: var(--gold); }
+.nav-links > li > a.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+/* Dropdown */
+.nav-dropdown { position: absolute; top: 100%; left: 0; background: var(--warm-white); border: 1px solid var(--border); border-top: 2px solid var(--gold); min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.2s; z-index: 300; }
+.nav-links > li:hover .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-dropdown a { display: block; padding: 10px 20px; font-size: 12px; color: var(--text-light); text-decoration: none; transition: color 0.2s, background 0.2s; letter-spacing: 0.06em; }
+.nav-dropdown a:hover { color: var(--text); background: var(--cream); }
+.nav-right { display: flex; gap: 8px; align-items: center; }
+.nav-icon { background: none; border: none; cursor: pointer; color: var(--text); font-size: 18px; padding: 8px; transition: color 0.2s; position: relative; }
+.nav-icon:hover { color: var(--gold); }
+.cart-count { position: absolute; top: 2px; right: 2px; background: var(--gold); color: var(--text); font-size: 9px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Jost'; font-weight: 500; }
+.nav-burger { display: none; background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text); }
+
+/* ── BREADCRUMB ── */
+.breadcrumb-wrap { background: var(--warm-white); border-bottom: 1px solid var(--border); }
+.breadcrumb { max-width: 1280px; margin: 0 auto; padding: 12px 32px; font-size: 12px; color: var(--text-light); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-light); text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb-sep { color: var(--taupe); }
+
+/* ── SECTIONS ── */
+.section { padding: 80px 32px; }
+.section-inner { max-width: 1280px; margin: 0 auto; }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+
+/* ── PRODUCT CARDS ── */
+.product-card { background: var(--cream); text-decoration: none; color: var(--text); display: block; transition: transform 0.25s; }
+.product-card:hover { transform: translateY(-4px); }
+.product-img-wrap { aspect-ratio: 3/4; background: linear-gradient(145deg, var(--blush) 0%, var(--taupe) 100%); position: relative; overflow: hidden; }
+.product-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.product-card:hover .product-img-wrap img { transform: scale(1.04); }
+.product-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--dark-taupe); font-family: 'Cormorant Garamond'; font-style: italic; font-size: 15px; }
+.product-badge { position: absolute; top: 12px; left: 12px; background: var(--text); color: var(--cream); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; z-index: 1; }
+.product-badge.promo { background: var(--gold); color: var(--text); }
+.product-info { padding: 16px; }
+.product-cat { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--taupe); margin-bottom: 4px; }
+.product-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; margin-bottom: 6px; line-height: 1.3; }
+.product-prices { display: flex; align-items: baseline; gap: 8px; }
+.price-current { font-size: 15px; color: var(--text); font-weight: 400; }
+.price-original { font-size: 13px; color: var(--text-light); text-decoration: line-through; }
+.product-colors { display: flex; gap: 4px; margin-top: 8px; }
+.product-color-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--border); }
+
+/* ── REVIEWS ── */
+.stars { color: var(--gold); letter-spacing: 2px; }
+
+/* ── FOOTER ── */
+footer { background: #2A1F1B; color: var(--gold-light); }
+.footer-main { max-width: 1280px; margin: 0 auto; padding: 60px 32px 40px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+.footer-brand .nav-logo { color: var(--gold-light); font-size: 24px; }
+.footer-brand p { font-size: 13px; color: var(--taupe); line-height: 1.8; margin-top: 16px; max-width: 280px; }
+.footer-social { display: flex; gap: 10px; margin-top: 20px; }
+.social-btn { width: 36px; height: 36px; border: 1px solid var(--taupe); display: flex; align-items: center; justify-content: center; color: var(--taupe); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; transition: all 0.2s; }
+.social-btn:hover { border-color: var(--gold); color: var(--gold); }
+.footer-col h4 { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; font-weight: 500; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 10px; }
+.footer-col a { color: var(--taupe); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+.footer-col a:hover { color: var(--gold-light); }
+.footer-bottom { border-top: 1px solid rgba(196,175,163,0.15); padding: 20px 32px; max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 11px; color: var(--dark-taupe); flex-wrap: wrap; gap: 8px; }
+
+/* ── BADGE STRIP ── */
+.badge-strip { background: var(--warm-white); border-bottom: 1px solid var(--border); overflow: hidden; padding: 14px 0; }
+.badge-strip-track { display: inline-flex; gap: 56px; white-space: nowrap; animation: scroll-banner 28s linear infinite; }
+.badge-item { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); }
+.badge-item strong { color: var(--gold); font-weight: 500; }
+
+/* ── FONT CLASSES (broderie preview) ── */
+.f-natalia    { font-family: 'Dancing Script', cursive; font-weight: 700; }
+.f-lovely     { font-family: 'Great Vibes', cursive; }
+.f-adelia     { font-family: 'Italianno', cursive; }
+.f-marchila   { font-family: 'Satisfy', cursive; }
+.f-laughing   { font-family: 'Pacifico', cursive; }
+.f-charlotte  { font-family: 'Sacramento', cursive; }
+.f-sacramento { font-family: 'Rochester', cursive; }
+.f-larianti   { font-family: 'Cormorant Garamond', serif; font-style: italic; }
+.f-rochester  { font-family: 'Jost', sans-serif; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .footer-main { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .nav-burger { display: block; }
+  .section { padding: 56px 20px; }
+  .nav-inner { padding: 0 20px; }
+}
+@media (max-width: 600px) {
+  .footer-main { grid-template-columns: 1fr; gap: 28px; }
+  .footer-bottom { flex-direction: column; }
+  .breadcrumb { padding: 10px 20px; }
+}
+
+
+    /* ─── CONFIG KEYS ─── */
+    /* Remplacez ces deux valeurs dans le fichier paiement.js */
+
+    .cart-page { max-width: 1180px; margin: 0 auto; padding: 40px 32px 100px; }
+
+    /* Steps */
+    .checkout-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 48px; }
+    .cs { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--taupe); }
+    .cs.active { color: var(--text); font-weight: 500; }
+    .cs.done { color: var(--gold); }
+    .cs-n { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; transition: all 0.3s; }
+    .cs.done .cs-n { background: var(--gold); border-color: var(--gold); color: var(--text); }
+    .cs.active .cs-n { background: var(--text); border-color: var(--text); color: var(--cream); }
+    .cs-line { width: 56px; height: 1px; background: var(--border); margin: 0 6px; }
+
+    /* Layout */
+    .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 32px; align-items: start; }
+
+    /* Cart box */
+    .cart-box { background: var(--warm-white); border: 1px solid var(--border); }
+    .box-head { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .box-head h2 { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 400; }
+    .cart-row { padding: 18px 24px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 70px 1fr auto; gap: 14px; align-items: start; }
+    .c-thumb { width: 70px; height: 70px; background: linear-gradient(145deg,var(--blush),var(--taupe)); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .c-name { font-family: 'Cormorant Garamond', serif; font-size: 17px; margin-bottom: 4px; }
+    .c-perso { font-size: 11px; color: var(--text-light); margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .c-perso span { background: var(--blush); padding: 2px 7px; }
+    .qty-c { display: inline-flex; align-items: center; border: 1px solid var(--border); }
+    .qty-b { width: 30px; height: 30px; background: none; border: none; cursor: pointer; font-size: 17px; color: var(--text); transition: background 0.15s; }
+    .qty-b:hover { background: var(--blush); }
+    .qty-v { width: 34px; height: 30px; text-align: center; border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border); font-family: 'Jost'; font-size: 13px; background: var(--warm-white); color: var(--text); }
+    .c-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .c-price { font-size: 16px; white-space: nowrap; }
+    .c-del { background: none; border: none; cursor: pointer; color: var(--taupe); font-size: 21px; line-height: 1; transition: color 0.2s; padding: 2px; }
+    .c-del:hover { color: #c0392b; }
+    .empty-state { padding: 72px 24px; text-align: center; }
+    .empty-state .big { font-size: 52px; margin-bottom: 14px; }
+    .empty-state p { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-style: italic; color: var(--text-light); margin-bottom: 24px; }
+
+    /* Promo */
+    .promo-row { padding: 14px 24px; display: flex; gap: 8px; border-top: 1px solid var(--border); }
+    .promo-inp { flex: 1; border: 1px solid var(--border); padding: 10px 13px; font-family: 'Jost'; font-size: 13px; outline: none; background: var(--cream); transition: border-color 0.2s; text-transform: uppercase; }
+    .promo-inp:focus { border-color: var(--taupe); }
+    .promo-apply { padding: 10px 16px; background: var(--text); color: var(--cream); border: none; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-family: 'Jost'; cursor: pointer; white-space: nowrap; }
+    .promo-ok { padding: 10px 24px; font-size: 13px; color: #2E7D32; background: #E8F5E9; display: none; align-items: center; gap: 6px; }
+    .promo-ok.show { display: flex; }
+
+    /* Summary */
+    .sum-box { background: var(--warm-white); border: 1px solid var(--border); position: sticky; top: 88px; }
+    .sum-head { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+    .sum-head h2 { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 400; }
+    .sum-lines { padding: 18px 24px 12px; }
+    .sum-line { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 9px; color: var(--text-light); }
+    .sum-line.total { font-size: 17px; color: var(--text); font-weight: 500; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; }
+    .sum-line.total span:last-child { font-family: 'Cormorant Garamond', serif; font-size: 22px; }
+    .ship-label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-light); margin: 0 0 8px; }
+    .ship-opt { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border: 1px solid var(--border); margin-bottom: 7px; cursor: pointer; transition: all 0.2s; }
+    .ship-opt:hover, .ship-opt.active { border-color: var(--taupe); background: var(--blush); }
+    .ship-opt input[type=radio] { accent-color: var(--gold); flex-shrink: 0; }
+    .ship-name { font-size: 13px; color: var(--text); }
+    .ship-detail { font-size: 11px; color: var(--text-light); }
+    .sum-cta { padding: 4px 24px 20px; }
+    .btn-co { width: 100%; padding: 15px; background: var(--text); color: var(--cream); border: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'Jost'; cursor: pointer; transition: background 0.2s; margin-bottom: 8px; }
+    .btn-co:hover:not(:disabled) { background: var(--dark-taupe); }
+    .btn-co:disabled { opacity: 0.38; cursor: not-allowed; }
+    .secure-lbl { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 11px; color: var(--text-light); margin-bottom: 16px; }
+    .trust-row { padding: 0 24px 18px; }
+    .t-item { font-size: 12px; color: var(--text-light); margin-bottom: 6px; display: flex; align-items: center; gap: 7px; }
+
+    /* Modal */
+    .overlay { position: fixed; inset: 0; background: rgba(42,31,27,0.68); z-index: 600; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .overlay.open { display: flex; }
+    .modal { background: var(--warm-white); max-width: 580px; width: 100%; max-height: 92vh; overflow-y: auto; display: flex; flex-direction: column; }
+    .modal-hd { padding: 22px 26px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--warm-white); z-index: 2; }
+    .modal-hd h3 { font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 400; }
+    .modal-x { background: none; border: none; font-size: 27px; cursor: pointer; color: var(--taupe); line-height: 1; padding: 0 2px; }
+    .modal-bd { padding: 26px; flex: 1; }
+    .mstep { display: none; }
+    .mstep.active { display: block; }
+    .mlbl { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+    .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-bottom: 13px; }
+    .mgrid.full { grid-template-columns: 1fr; }
+    .mfg { display: flex; flex-direction: column; gap: 5px; }
+    .mfl { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text); font-weight: 500; }
+    .mfi { border: 1px solid var(--border); background: var(--cream); padding: 10px 13px; font-family: 'Jost'; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; width: 100%; }
+    .mfi:focus { border-color: var(--taupe); }
+    .mfi.err { border-color: #c0392b; animation: shake 0.3s; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+    /* Recap */
+    .recap-box { background: var(--cream); border: 1px solid var(--border); padding: 14px 16px; margin-bottom: 18px; }
+    .recap-line { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; color: var(--text-light); }
+    .recap-line.total { font-size: 15px; color: var(--text); font-weight: 500; border-top: 1px solid var(--border); padding-top: 8px; margin-top: 3px; }
+
+    /* Payment tabs */
+    .pay-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .pay-tab { border: 2px solid var(--border); padding: 14px 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .pay-tab:hover, .pay-tab.active { border-color: var(--dark-taupe); background: var(--blush); }
+    .pay-tab .p-ico { font-size: 22px; margin-bottom: 4px; }
+    .pay-tab .p-lbl { font-size: 12px; color: var(--text); font-weight: 400; }
+    .pay-panel { display: none; }
+    .pay-panel.active { display: block; }
+
+    /* Stripe card element */
+    .stripe-wrap { border: 1px solid var(--border); padding: 13px 14px; background: var(--cream); margin-bottom: 14px; transition: border-color 0.2s; }
+    .stripe-wrap.focused { border-color: var(--taupe); }
+    #stripe-card-errors { color: #c0392b; font-size: 12px; margin-top: 6px; min-height: 16px; }
+    .stripe-secure { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-light); margin-top: 8px; }
+    .stripe-badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .stripe-badge { border: 1px solid var(--border); padding: 4px 9px; font-size: 10px; color: var(--text-light); letter-spacing: 0.05em; }
+
+    /* PayPal container */
+    #paypal-button-container { min-height: 48px; }
+    .paypal-note { font-size: 12px; color: var(--text-light); margin-bottom: 14px; padding: 10px 12px; background: var(--blush); border: 1px solid var(--border); }
+
+    /* Info blocks */
+    .info-blk { padding: 13px 15px; background: var(--blush); border: 1px solid var(--border); font-size: 13px; color: var(--text-light); line-height: 1.7; margin-bottom: 12px; }
+
+    /* Modal nav */
+    .mnav { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
+
+    /* Processing overlay */
+    .processing { display: none; position: absolute; inset: 0; background: rgba(250,247,242,0.88); align-items: center; justify-content: center; flex-direction: column; gap: 14px; z-index: 10; }
+    .processing.show { display: flex; }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* Success */
+    .success-wrap { text-align: center; padding: 16px 0; }
+    .success-wrap .s-ico { font-size: 60px; margin-bottom: 18px; }
+    .success-wrap h3 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; margin-bottom: 10px; }
+    .success-wrap p { font-size: 14px; color: var(--text-light); margin-bottom: 6px; }
+    .next-box { background: var(--cream); border: 1px solid var(--border); padding: 18px; margin: 22px 0; text-align: left; }
+    .next-box p { font-size: 14px; color: var(--text-light); margin-bottom: 7px; }
+
+    @media(max-width:900px) { .cart-layout{grid-template-columns:1fr;} .sum-box{position:static;} .cs span:not(.cs-n){display:none;} .cs-line{width:20px;} }
+    @media(max-width:600px) { .cart-page{padding:24px 16px 80px;} .cart-row{grid-template-columns:56px 1fr;} .c-right{grid-column:2;} .pay-tabs{grid-template-columns:1fr 1fr;} .mgrid{grid-template-columns:1fr;} .modal-bd{padding:18px;} }
+  
+  </style>
+</head>
+<body>
+
+<script>
+/* ═══════════════════════════════════════════
+   EDENELLE CRÉATION — products.js
+   Catalogue complet des produits
+   ═══════════════════════════════════════════ */
+
+const PRODUCTS = [
+  // ── PACKS ──
+  { id:'pack-flowers', name:'Pack "Flowers"', cat:'packs', price:86, priceOriginal:93, badge:'Nouveau', desc:'Couverture gaze de coton + doudou oreilles de lapin + protège carnet de santé. Motif fleuri brodé.' },
+  { id:'pack-lapinou', name:'Pack "Lapinou"', cat:'packs', price:86, priceOriginal:93, badge:'Nouveau', desc:'Couverture douce + doudou lapinou + protège carnet assorti.' },
+  { id:'pack-brindille', name:'Pack "Brindille"', cat:'packs', price:86, priceOriginal:93, badge:'Nouveau', desc:'Couverture + doudou + protège carnet, motif brindille délicat.' },
+  { id:'pack-softy', name:'Pack "Softy"', cat:'packs', price:75, priceOriginal:80, badge:null, desc:'Couverture polaire ultra-douce + doudou assorti.' },
+  { id:'pack-signature-polaire', name:'Pack "Signature" Polaire', cat:'packs', price:85, priceOriginal:91, badge:null, desc:'Couverture polaire + doudou signature, dans un coffret élégant.' },
+  { id:'pack-signature-coton', name:'Pack "Signature" Coton', cat:'packs', price:85, priceOriginal:91, badge:null, desc:'Couverture coton + doudou signature, légèreté et douceur.' },
+  { id:'pack-luxury-polaire', name:'Pack "Luxury" Polaire', cat:'packs', price:175, priceOriginal:189, badge:null, desc:'Pack complet 5 pièces en polaire premium.' },
+  { id:'pack-luxury-coton', name:'Pack "Luxury" Coton', cat:'packs', price:175, priceOriginal:189, badge:null, desc:'Pack complet 5 pièces en coton certifié Oeko-Tex.' },
+  { id:'pack-milky-polaire', name:'Pack "Milky" Polaire', cat:'packs', price:167, priceOriginal:180, badge:null, desc:'Pack naissance luxueux en velours polaire.' },
+  { id:'pack-milky-coton', name:'Pack "Milky" Coton', cat:'packs', price:167, priceOriginal:180, badge:null, desc:'Pack naissance luxueux en coton doux.' },
+  { id:'pack-prestige', name:'Pack "Prestige"', cat:'packs', price:285, priceOriginal:313, badge:null, desc:'Le pack ultime — couverture, gigoteuse, doudou, tenue et accessoires.' },
+  { id:'pack-essentiels', name:'Pack "Essentiels"', cat:'packs', price:55, priceOriginal:60, badge:null, desc:'L\'essentiel pour accueillir bébé : couverture + doudou.' },
+
+  // ── COUVERTURES ──
+  { id:'set-douillette', name:'Set Couverture & Doudou Douillette', cat:'couvertures', price:65, priceOriginal:69, badge:null, desc:'Couverture polaire douillette + doudou assorti, brodés au prénom.' },
+  { id:'set-douceur', name:'Set Couverture & Doudou Douceur', cat:'couvertures', price:65, priceOriginal:69, badge:null, desc:'Couverture gaze de coton + doudou, pour les nuits sereines.' },
+  { id:'couverture-maille', name:'Couverture Maille', cat:'couvertures', price:39, priceOriginal:null, badge:'Nouveau', desc:'Couverture tricot maille douce, idéale toutes saisons.' },
+  { id:'coussin-gaze', name:'Coussin Gaze de Coton', cat:'couvertures', price:39, priceOriginal:null, badge:'Nouveau', desc:'Coussin décoratif en gaze de coton, brodé au prénom.' },
+
+  // ── GIGOTEUSES ──
+  { id:'gigoteuse-ecru', name:'Gigoteuse Écru', cat:'gigoteuses', price:38, priceOriginal:null, badge:null, desc:'Gigoteuse en coton écru, légère et confortable. Broderie personnalisée.' },
+
+  // ── CHANCELIÈRES ──
+  { id:'chanceliere-polaire-ecru', name:'Chancelière Polaire Écru', cat:'trousseau', price:48, priceOriginal:null, badge:null, desc:'Chancelière polaire pour poussette ou siège auto.' },
+  { id:'chanceliere-polaire-beige', name:'Chancelière Polaire Beige Clair', cat:'trousseau', price:48, priceOriginal:null, badge:null, desc:'Chancelière polaire beige clair, douce et chaude.' },
+  { id:'chanceliere-coton-beige', name:'Chancelière Coton Beige Clair', cat:'trousseau', price:48, priceOriginal:null, badge:null, desc:'Chancelière légère en gaze de coton.' },
+  { id:'chanceliere-coton-ecru', name:'Chancelière Coton Écru', cat:'trousseau', price:48, priceOriginal:null, badge:null, desc:'Chancelière estivale en coton naturel.' },
+
+  // ── SACS ──
+  { id:'sac-dos-beige', name:'Sac à Dos Beige', cat:'sacs', price:39, priceOriginal:null, badge:'Nouveau', desc:'Sac à dos en gaze de coton beige, brodé au prénom.' },
+  { id:'sac-dos-vieux-rose', name:'Sac à Dos Vieux Rose', cat:'sacs', price:33.15, priceOriginal:39, badge:null, desc:'Sac à dos vieux rose, broderie prénom.' },
+  { id:'sac-dos-feuilles', name:'Sac à Dos Feuilles Caramel', cat:'sacs', price:31.20, priceOriginal:39, badge:null, desc:'Sac à dos motif feuilles caramel.' },
+  { id:'sac-langer-beige', name:'Sac à Langer Beige', cat:'sacs', price:54, priceOriginal:null, badge:null, desc:'Grand sac à langer en gaze de coton, brodé.' },
+  { id:'sac-langer-cacao', name:'Sac à Langer Cacao', cat:'sacs', price:47.60, priceOriginal:56, badge:'Nouveau', desc:'Sac à langer coloris cacao, élégant et pratique.' },
+  { id:'pack-rentree', name:'Pack Rentrée', cat:'sacs', price:46, priceOriginal:null, badge:'Nouveau', desc:'Sac à dos + trousse brodés assortis pour la rentrée.' },
+
+  // ── BAIN ──
+  { id:'set-baby-bath', name:'Set Baby Bath', cat:'bain', price:45, priceOriginal:null, badge:'Nouveau', desc:'Cape de bain + gant + bavoir, brodés au prénom.' },
+  { id:'tablier-bain', name:'Tablier de Bain', cat:'bain', price:29, priceOriginal:null, badge:null, desc:'Tablier de bain pratique pour les parents, brodé.' },
+  { id:'peignoir-3-4-ans', name:'Peignoir 3-4 ans', cat:'bain', price:26, priceOriginal:null, badge:null, desc:'Peignoir éponge blanc, taille 3-4 ans, brodé.' },
+
+  // ── DOUDOUS ──
+  { id:'doudou-signature', name:'Doudou Signature', cat:'doudous', price:35, priceOriginal:null, badge:'Nouveau', desc:'Le doudou signature Edenelle, brodé au prénom.' },
+  { id:'doudou-ourson-minky', name:'Doudou Ourson Minky Blanc', cat:'doudous', price:14, priceOriginal:20, badge:null, desc:'Doudou ourson en minky blanc ultra-doux.' },
+
+  // ── TENUES ──
+  { id:'set-combi-maille-3pcs', name:'Set Combi Maille Coton 3 pcs', cat:'tenues', price:36, priceOriginal:null, badge:'Nouveau', desc:'Set 3 pièces en maille coton : body, pantalon, bonnet.' },
+  { id:'set-brassiere-4pcs', name:'Set Brassière Maille 4 pcs Brun', cat:'tenues', price:38, priceOriginal:null, badge:null, desc:'Set 4 pièces brassières maille coloris brun.' },
+  { id:'combipilote-maille', name:'Combipilote Maille Blanche', cat:'tenues', price:39, priceOriginal:null, badge:'Nouveau', desc:'Combipilote en maille blanche douce, brodée.' },
+  { id:'brassiere-maille-beige', name:'Brassière Maille Beige', cat:'tenues', price:22, priceOriginal:null, badge:null, desc:'Brassière en maille coton beige, brodée.' },
+  { id:'brassiere-maille-blanc', name:'Brassière Maille Blanc', cat:'tenues', price:18.70, priceOriginal:22, badge:null, desc:'Brassière en maille coton blanc, brodée.' },
+
+  // ── PROTÈGE-CARNETS ──
+  { id:'protege-carnet-flowers', name:'Protège Carnet Santé Flowers', cat:'accessoires', price:24, priceOriginal:null, badge:'Nouveau', desc:'Protège carnet de santé en gaze de coton motif flowers.' },
+
+  // ── ACCESSOIRES ──
+  { id:'couverts-graves', name:'Couverts Gravés', cat:'accessoires', price:14, priceOriginal:null, badge:'Nouveau', desc:'Set fourchette + cuillère gravés au prénom.' },
+  { id:'brosse-peigne', name:'Duo Brosse & Peigne en Bois', cat:'accessoires', price:19, priceOriginal:null, badge:null, desc:'Brosse et peigne en bois naturel pour bébé.' },
+  { id:'trousse-gaze', name:'Trousse v2 Gaze de Coton', cat:'accessoires', price:22, priceOriginal:null, badge:null, desc:'Trousse de toilette en gaze de coton, brodée.' },
+
+  // ── CARTE CADEAU ──
+  { id:'carte-cadeau', name:'Carte Cadeau', cat:'cadeau', price:30, priceOriginal:null, badge:null, desc:'Carte cadeau Edenelle Création, valable sur tout le site.' },
+];
+
+// Helper
+function getProductsByCategory(cat) {
+  if (!cat || cat === 'all') return PRODUCTS;
+  return PRODUCTS.filter(p => p.cat === cat);
+}
+
+function getProductById(id) {
+  return PRODUCTS.find(p => p.id === id);
+}
+
+/* ═══════════════════════════════════════════
+   EDENELLE CRÉATION — components.js
+   Nav, Footer, Cart, shared utilities
+   ═══════════════════════════════════════════ */
+
+// ── CART STATE ──
+const Cart = {
+  items: JSON.parse(localStorage.getItem('edenelle_cart') || '[]'),
+  
+  add(item) {
+    this.items.push(item);
+    this.save();
+    this.updateCount();
+    this.showNotif(item.name);
+  },
+  
+  remove(index) {
+    this.items.splice(index, 1);
+    this.save();
+    this.updateCount();
+  },
+  
+  save() {
+    localStorage.setItem('edenelle_cart', JSON.stringify(this.items));
+  },
+  
+  total() {
+    return this.items.reduce((sum, i) => sum + i.price, 0).toFixed(2);
+  },
+  
+  count() { return this.items.length; },
+  
+  updateCount() {
+    document.querySelectorAll('.cart-count').forEach(el => {
+      el.textContent = this.count();
+      el.style.display = this.count() > 0 ? 'flex' : 'none';
+    });
+  },
+  
+  showNotif(name) {
+    const notif = document.getElementById('cart-notif');
+    if (!notif) return;
+    notif.querySelector('.notif-name').textContent = name;
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 3000);
+  }
+};
+
+// ── RENDER NAV ──
+function renderNav(activePage = '') {
+  const html = `
+    <div class="top-banner">
+      <div class="banner-track">
+        <span>🇫🇷 Confectionné en Vendée</span>
+        <span>·</span>
+        <span>🧵 Broderie personnalisée au prénom de bébé</span>
+        <span>·</span>
+        <span>📦 Mondial Relay offert dès 130€ — code <strong>LIVRAISON</strong></span>
+        <span>·</span>
+        <span>✅ Matières Oeko-Tex certifiées</span>
+        <span>·</span>
+        <span>⭐ +4000 clients satisfaits</span>
+        <span>·</span>
+        <span>🇫🇷 Confectionné en Vendée</span>
+        <span>·</span>
+        <span>🧵 Broderie personnalisée au prénom de bébé</span>
+        <span>·</span>
+        <span>📦 Mondial Relay offert dès 130€ — code <strong>LIVRAISON</strong></span>
+        <span>·</span>
+        <span>✅ Matières Oeko-Tex certifiées</span>
+        <span>·</span>
+        <span>⭐ +4000 clients satisfaits</span>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Edenelle <span>Création</span></a>
+        <ul class="nav-links" id="navLinks">
+          <li>
+            <a href="catalogue.html" class="${activePage==='packs'?'active':''}">Packs Brodés</a>
+            <div class="nav-dropdown">
+              <a href="catalogue.html?cat=packs">Tous les packs</a>
+              <a href="catalogue.html?cat=packs-polaire">Packs polaire</a>
+              <a href="catalogue.html?cat=packs-coton">Packs coton</a>
+            </div>
+          </li>
+          <li>
+            <a href="catalogue.html?cat=couvertures" class="${activePage==='couvertures'?'active':''}">Couvertures</a>
+          </li>
+          <li>
+            <a href="catalogue.html?cat=gigoteuses" class="${activePage==='gigoteuses'?'active':''}">Gigoteuses</a>
+          </li>
+          <li>
+            <a href="catalogue.html?cat=trousseau" class="${activePage==='trousseau'?'active':''}">Trousseau</a>
+            <div class="nav-dropdown">
+              <a href="catalogue.html?cat=tenues">Tenues de naissance</a>
+              <a href="catalogue.html?cat=doudous">Doudous</a>
+              <a href="catalogue.html?cat=bain">Bain & Peignoirs</a>
+              <a href="catalogue.html?cat=sacs">Sacs & Pochettes</a>
+            </div>
+          </li>
+          <li>
+            <a href="catalogue.html?cat=accessoires" class="${activePage==='accessoires'?'active':''}">Accessoires</a>
+          </li>
+          <li>
+            <a href="carte-cadeau.html" class="${activePage==='cadeau'?'active':''}">🎁 Idées Cadeaux</a>
+          </li>
+        </ul>
+        <div class="nav-right">
+          <button class="nav-icon" onclick="toggleSearch()" title="Rechercher">🔍</button>
+          <button class="nav-icon" onclick="window.location='contact.html'" title="Contact">👤</button>
+          <button class="nav-icon" onclick="toggleCart()" title="Panier" style="position:relative;">
+            🛍️
+            <span class="cart-count" style="display:none;">0</span>
+          </button>
+          <button class="nav-burger" onclick="toggleMobileNav()">☰</button>
+        </div>
+      </div>
+      <!-- Mobile nav -->
+      <div id="mobileNav" style="display:none; background:var(--warm-white); border-top:1px solid var(--border); padding:20px 32px;">
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:16px;">
+          <li><a href="catalogue.html" style="font-size:14px; color:var(--text); text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;">Packs Brodés</a></li>
+          <li><a href="catalogue.html?cat=couvertures" style="font-size:14px; color:var(--text); text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;">Couvertures</a></li>
+          <li><a href="catalogue.html?cat=gigoteuses" style="font-size:14px; color:var(--text); text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;">Gigoteuses</a></li>
+          <li><a href="catalogue.html?cat=trousseau" style="font-size:14px; color:var(--text); text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;">Trousseau</a></li>
+          <li><a href="catalogue.html?cat=accessoires" style="font-size:14px; color:var(--text); text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;">Accessoires</a></li>
+          <li><a href="carte-cadeau.html" style="font-size:14px; color:var(--gold); text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;">🎁 Idées Cadeaux</a></li>
+          <li><a href="contact.html" style="font-size:14px; color:var(--text); text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <!-- Cart notification -->
+    <div id="cart-notif" style="position:fixed; top:90px; right:24px; background:var(--text); color:var(--cream); padding:14px 20px; font-size:12px; letter-spacing:0.06em; z-index:500; transform:translateX(120%); transition:transform 0.3s; border-left:3px solid var(--gold);">
+      ✓ <span class="notif-name"></span> ajouté au panier
+    </div>
+  `;
+  document.getElementById('site-header').innerHTML = html;
+  Cart.updateCount();
+}
+
+// ── RENDER FOOTER ──
+function renderFooter() {
+  const html = `
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="color:var(--gold-light);">Edenelle <span>Création</span></a>
+        <p>Créations brodées personnalisées, confectionnées artisanalement en Vendée pour célébrer l'arrivée de votre trésor.</p>
+        <div class="footer-social">
+          <a href="https://www.tiktok.com/@edenelle.creation" class="social-btn" target="_blank">TT</a>
+          <a href="https://www.facebook.com/edenelle.creation" class="social-btn" target="_blank">FB</a>
+          <a href="https://www.instagram.com/edenellecreation/" class="social-btn" target="_blank">IG</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Collections</h4>
+        <ul>
+          <li><a href="catalogue.html">Packs Brodés</a></li>
+          <li><a href="catalogue.html?cat=couvertures">Couvertures</a></li>
+          <li><a href="catalogue.html?cat=gigoteuses">Gigoteuses</a></li>
+          <li><a href="catalogue.html?cat=doudous">Doudous</a></li>
+          <li><a href="catalogue.html?cat=tenues">Tenues</a></li>
+          <li><a href="catalogue.html?cat=bain">Bain</a></li>
+          <li><a href="catalogue.html?cat=sacs">Sacs & Pochettes</a></li>
+          <li><a href="catalogue.html?cat=accessoires">Accessoires</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="a-propos.html">Notre histoire</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="carte-cadeau.html">Carte cadeau</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="livraison.html">Livraison</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <ul>
+          <li><a href="cgv.html">CGV</a></li>
+          <li><a href="confidentialite.html">Confidentialité</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="retours.html">Politique de retour</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© Edenelle Création 2021 — SIRET n°94845473100019 — Challans, Vendée (85300)</span>
+      <span>Fait avec 🧵 en Vendée</span>
+    </div>
+  `;
+  document.getElementById('site-footer').innerHTML = html;
+}
+
+// ── RENDER BADGE STRIP ──
+function renderBadgeStrip() {
+  const el = document.getElementById('badge-strip');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="badge-strip">
+      <div class="badge-strip-track">
+        <span class="badge-item">🇫🇷 <strong>Confectionné en France</strong> · Artisanal en Vendée</span>
+        <span class="badge-item">🧵 <strong>Broderie personnalisée</strong> · Au prénom de bébé</span>
+        <span class="badge-item">✅ <strong>Matières Oeko-Tex</strong> · Sûres pour bébé</span>
+        <span class="badge-item">📦 <strong>Mondial Relay offert</strong> · Dès 130€ code LIVRAISON</span>
+        <span class="badge-item">⭐ <strong>+4000 clients</strong> · Satisfaits</span>
+        <span class="badge-item">💛 <strong>Satisfaite</strong> · Ou remboursée</span>
+        <span class="badge-item">🇫🇷 <strong>Confectionné en France</strong> · Artisanal en Vendée</span>
+        <span class="badge-item">🧵 <strong>Broderie personnalisée</strong> · Au prénom de bébé</span>
+        <span class="badge-item">✅ <strong>Matières Oeko-Tex</strong> · Sûres pour bébé</span>
+        <span class="badge-item">📦 <strong>Mondial Relay offert</strong> · Dès 130€ code LIVRAISON</span>
+        <span class="badge-item">⭐ <strong>+4000 clients</strong> · Satisfaits</span>
+        <span class="badge-item">💛 <strong>Satisfaite</strong> · Ou remboursée</span>
+      </div>
+    </div>
+  `;
+}
+
+// ── UTILITIES ──
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.style.display = nav.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleSearch() {
+  const q = prompt('Rechercher un produit :');
+  if (q) window.location = `catalogue.html?q=${encodeURIComponent(q)}`;
+}
+
+function toggleCart() {
+  window.location = 'panier.html';
+}
+
+// Notif show helper
+document.addEventListener('DOMContentLoaded', () => {
+  const notif = document.getElementById('cart-notif');
+  if (notif) {
+    notif.addEventListener('transitionend', () => {});
+  }
+});
+
+// CSS inject for notif
+const s = document.createElement('style');
+s.textContent = `#cart-notif.show { transform: translateX(0) !important; }`;
+document.head.appendChild(s);
+
+
+</script>
+</body>
+</html>
